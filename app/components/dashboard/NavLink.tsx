@@ -5,4 +5,3 @@ export default function NavLink() {
     <div>NavLink</div>
   )
 }
-
