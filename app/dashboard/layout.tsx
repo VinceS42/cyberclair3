@@ -51,7 +51,7 @@ export default function RootLayout({
                     </a>
                     <button></button>
                 </div>
-                <div className=" absolute text-white left-0 bottom-0 right-0 pb-6 px-4 before:left-0 before:right-0 before:bottom-full before:h-10 before:bg-gradient-to-t before:from-[#131617] before:to-[rgba(19,22,23,0)] before:pointer-events-none max-md:px-3">
+                <div className=" absolute text-white left-0 bottom-0 right-0 pb-6 px-4 before:left-0 before:right-0 before:bottom-full before:h-10 before:bg-gradient-to-t before:from-[#131617] before:to-[#131617] before:pointer-events-none max-md:px-3">
                     <div className="mb-3 shadow-[0_1.25rem_1.5rem_0_rgba(0,0,0,0.5)]">
                         <div className="p-2.5 bg-[#202324] rounded-xl">
                             <div className="text-white flex items-center px-2.5 py-2.5 pb-4.5">
