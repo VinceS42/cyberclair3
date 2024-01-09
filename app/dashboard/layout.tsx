@@ -81,8 +81,8 @@ export default function RootLayout({
                 </div>
             </div>
             <div className="flex py-6 max-md:py-0 h-screen">
-                <div className="relative flex-grow max-w-full rounded-[1.25rem] pr-[22.5rem] 2xl:pr-80 lg:pr-0 bg-white">
-                    <p className="p-20">jazgduizagdyuizagduyzagduyazgdyuazg</p>
+                <div className="relative flex-grow max-w-full rounded-[1.25rem] lg:pr-0 bg-white justify-center">
+                    <h2 className="p-20">Bienvenue sur CyberClair3</h2>
                 </div>
             </div>
         </main>
