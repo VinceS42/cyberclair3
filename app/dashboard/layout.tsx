@@ -21,7 +21,7 @@ const fakeUserData = {
     firstName: "Nicolas",
     lastName: "Beau gosse",
     email: "nicolas.odin@codaza.fr",
-    isPremium: true,
+    isPremium: false,
 }
 
 export default function RootLayout({

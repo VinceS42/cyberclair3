@@ -22,7 +22,7 @@ export default function CardAccount({
     isPremium,
 }: Readonly<Props>) {
     return (
-        <div className="mb-3 shadow-[0_1.25rem_1.5rem_0_rgba(0,0,0,0.5)]">
+        <div className="mb-3 shadow-xl">
             <div className="p-2.5 bg-[#202324] rounded-xl">
                 <div className="text-white flex items-center px-2.5 py-2.5 pb-4.5">
                     <div className="relative w-10 h-10">
