@@ -16,7 +16,7 @@ export default function CardFeature({
 }: Readonly<Props>) {
     return (
         <Link
-            href={href}
+            href={`dashboard/${href}`}
             className="flex w-full items-center mb-5 p-3.5 border border-solid border-gray-200 rounded-xl hover:border-transparent hover:shadow-2xl last:mb-0 group transition duration-300 ease-in-out"
         >
             <div className="relative flex justify-center items-center w-14 h-14 mr-6 bg-[#202324] rounded-xl">

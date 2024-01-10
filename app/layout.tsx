@@ -1,29 +1,29 @@
-import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from "next"
+import { Poppins } from "next/font/google"
+import "./globals.css"
 
-const poppins = Poppins({ 
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: '--font-poppins',
-});
+const poppins = Poppins({
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+    variable: "--font-poppins",
+})
 
 export const metadata: Metadata = {
     title: "Cyberclair3",
     description: "",
     icons: {
-      icon: "/assets/img/Nico.png"
-    }
-};
+        icon: "/assets/img/Nico.png",
+    },
+}
 
 export default function RootLayout({
     children,
-}: {
-    children: React.ReactNode;
-}) {
+}: Readonly<{
+    children: React.ReactNode
+}>) {
     return (
-        <html lang="en">
+        <html lang="fr">
             <body className={poppins.className}>{children}</body>
         </html>
-    );
+    )
 }
