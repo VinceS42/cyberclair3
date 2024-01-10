@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import Image from "next/image"
 import { SunIcon } from "@heroicons/react/24/solid"
-import { MoonIcon, LockOpenIcon } from "@heroicons/react/24/outline"
+import { MoonIcon, LockOpenIcon, ArrowRightIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
 
 import logo from "../../public/assets/img/logo.svg"
@@ -87,11 +87,12 @@ export default function RootLayout({
                             </div>
                         </div>
                         <div className="max-w-[30.75rem] mx-auto">
-                            <button className="group flex items-center mb-5 p-3.5 border-4 rounded-xl h6 transition-all hover:border-transparent hover:shadow-[0_0_1rem_0.25rem_rgba(0,0,0,0.04),0px_2rem_1.5rem_-1rem_rgba(0,0,0,0.12)] last:mb-0 2xl:p-2.5 lg:p-3.5 dark:border-n-5 dark:hover:border-n-7 dark:hover:bg-n-7">
-                                <div className="relative flex justify-center items-center w-15 h-15 mr-6">
-                                    <LockOpenIcon className="inline-block w-6 h-6 relative z-1" />
+                            <button className="flex w-full items-center mb-5 p-3.5 border rounded-xl transition-all hover:border-transparent hover:shadow-2xl last:mb-0 2xl:p-2.5 lg:p-3.5 group">
+                                <div className="relative flex justify-center items-center w-14 h-14 mr-6 bg-[#202324] rounded-xl">
+                                    <LockOpenIcon className="w-6 h-6 text-white" />
                                 </div>
-                                <span>test</span>
+                                <span className="text-lg font-medium">Vérification mot de passe</span>
+                                <ArrowRightIcon className="w-6 h-6 ml-auto opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out" />
                             </button>
                         </div>
                     </div>
