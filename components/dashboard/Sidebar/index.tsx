@@ -1,8 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 
-import logo from "../../../../public/assets/img/logo.svg"
-import nico from "../../../../public/assets/img/Nico.png"
+import logo from "../../../public/assets/img/logo.svg"
+import nico from "../../../public/assets/img/Nico.png"
 import CardAccount from "./CardAccount"
 import ToggleTheme from "./ToggleTheme"
 import MenuItem from "../MenuItem"

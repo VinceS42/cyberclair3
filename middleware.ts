@@ -1,16 +1,36 @@
-// app/middleware.ts
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse, NextRequest } from "next/server"
+import { createClient } from "@/utils/supabase/middleware"
 
-export function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
+export async function middleware(request: NextRequest) {
+    const url = new URL(request.url)
+    const path = url.pathname
 
-    // Redirige les requêtes de la racine vers '/auth/login'
-    if (pathname === "/") {
-        const url = request.nextUrl.clone();
-        url.pathname = "/auth/login";
-        return NextResponse.redirect(url);
+    if (path.startsWith("/dashboard")) {
+        const { supabase } = createClient(request)
+        const { data } = await supabase.auth.getSession()
+
+        if (!data.session) {
+            // Utilise l'URL de base pour construire une URL absolue
+            const loginUrl = new URL("/login", url.origin).toString()
+            return NextResponse.redirect(loginUrl)
+        }
+
+        // if data.session is not null and path is /login, redirect to /dashboard
+
+        return NextResponse.next()
     }
 
-    return NextResponse.next();
+    if (path === "/login") {
+        const { supabase } = createClient(request)
+        const { data } = await supabase.auth.getSession()
+
+        if (data.session) {
+            const dashboardUrl = new URL("/dashboard", url.origin).toString()
+            return NextResponse.redirect(dashboardUrl)
+        }
+    }
+}
+
+export const config = {
+    matcher: ["/dashboard/:path*", "/login"],
 }

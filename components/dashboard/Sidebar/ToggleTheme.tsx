@@ -7,7 +7,7 @@ export default function ToggleTheme() {
 
     return (
         <div
-            className={`relative flex w-full p-1 bg-[#202324] rounded-xl before:absolute before:left-1 before:top-1 before:bottom-1 before:w-[calc(50%-0.25rem)] before:bg-background before:rounded-[0.625rem] before:transition-all ${
+            className={`relative flex w-full p-1 bg-[#202324] rounded-xl before:absolute before:left-1 before:top-1 before:bottom-1 before:w-[calc(50%-0.25rem)] before:bg-backgroundCyber before:rounded-[0.625rem] before:transition-all ${
                 theme === "dark" && "before:translate-x-full"
             }`}
         >

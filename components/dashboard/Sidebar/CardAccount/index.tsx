@@ -1,10 +1,15 @@
+"use client"
 import Image from "next/image"
 import {
     ArrowRightStartOnRectangleIcon,
     Cog6ToothIcon,
 } from "@heroicons/react/24/outline"
+import { createClient } from "@/utils/supabase/client"
+import { useRouter } from "next/navigation"
 
 import BtnUpgrade from "../BtnUpgrade"
+import { useEffect } from "react"
+import { get } from "http"
 
 type Props = {
     avatar: string
@@ -21,6 +26,18 @@ export default function CardAccount({
     email,
     isPremium,
 }: Readonly<Props>) {
+    const router = useRouter()
+    const supabase = createClient()
+
+    async function signOut() {
+        const { error } = await supabase.auth.signOut()
+        if (error) {
+            return console.error(error)
+        } else {
+            router.push("/")
+        }
+    }
+
     return (
         <div className="mb-3 shadow-xl">
             <div className="p-2.5 bg-[#202324] rounded-xl">
@@ -52,11 +69,12 @@ export default function CardAccount({
                     </div>
                 </div>
                 <div className="flex flex-row">
-                    <button className="flex gap-x-2 items-center w-full h-12 font-semibold text-sm group">
-                        <ArrowRightStartOnRectangleIcon className="h-5 w-5 opacity-30 group-hover:opacity-100 transition duration-100 ease-in-out" />
-                        <span className="text-white opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out">
-                            Log out
-                        </span>
+                    <button
+                        onClick={signOut}
+                        className="flex gap-x-2 items-center w-full h-12 font-semibold transition-colors hover:text-[#0084ff] text-sm"
+                    >
+                        <ArrowRightStartOnRectangleIcon className="h-5 w-5 opacity-30" />
+                        <span>Log out</span>
                     </button>
                     <button className="flex gap-x-2 items-center w-full h-12 font-semibold text-sm group">
                         <Cog6ToothIcon className="h-5 w-5 opacity-30 group-hover:opacity-100 transition duration-100 ease-in-out" />
