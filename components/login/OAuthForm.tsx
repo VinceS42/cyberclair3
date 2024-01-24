@@ -5,5 +5,5 @@ interface OAuthFormProps {
 }
 
 export default function OAuthForm({ name }: OAuthFormProps) {
-    return <Button className="w-full">Login With {name}</Button>;
+    return <Button className="w-full">{name}</Button>;
 }

@@ -1,7 +1,16 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useTransition } from "react";
+import {
+    ArrowRightEndOnRectangleIcon,
+    AtSymbolIcon,
+    LockClosedIcon,
+} from "@heroicons/react/24/outline";
+import * as z from "zod";
 
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -9,38 +18,40 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/use-toast"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/utils/utils"
+} from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
+import { cn } from "@/utils/utils";
 
 const FormSchema = z.object({
     email: z.string().email(),
     password: z.string().min(1, {
         message: "Password is required.",
     }),
-})
+});
 
 export default function SignInForm({
     signIn,
 }: Readonly<{
-    signIn: (formData: FormData) => Promise<void>
+    signIn: (formData: FormData) => Promise<void>;
 }>) {
+    const [isPending, startTransition] = useTransition();
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
             email: "",
             password: "",
         },
-    })
+    });
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
-        const formData = new FormData()
-        formData.append("email", data.email)
-        formData.append("password", data.password)
+        startTransition(async () => {
+            const formData = new FormData();
+            formData.append("email", data.email);
+            formData.append("password", data.password);
 
-        signIn(formData)
+            signIn(formData);
+        });
 
         toast({
             title: "You submitted the following values:",
@@ -51,7 +62,7 @@ export default function SignInForm({
                     </code>
                 </pre>
             ),
-        })
+        });
     }
 
     return (
@@ -65,9 +76,13 @@ export default function SignInForm({
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel className="flex items-center">
+                                <AtSymbolIcon className="w-5 h-5 mr-2" />
+                                <p>Email :</p>
+                            </FormLabel>
                             <FormControl>
                                 <Input
+                                    autoComplete="email"
                                     placeholder="exemple@gmail.com"
                                     {...field}
                                     type="email"
@@ -83,10 +98,14 @@ export default function SignInForm({
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel className="flex items-center">
+                                <LockClosedIcon className="w-5 h-5 mr-2" />
+                                <p>Mot de passe :</p>
+                            </FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="Password"
+                                    autoComplete="current-password"
+                                    placeholder="Mot de passe..."
                                     {...field}
                                     type="password"
                                     onChange={field.onChange}
@@ -98,9 +117,13 @@ export default function SignInForm({
                     )}
                 />
                 <Button type="submit" className="w-full flex gap-2">
-                    SignIn
+                    <ArrowRightEndOnRectangleIcon className="w-5 h-5 mr-3" />
+                    <p>Connexion</p>
+                    <AiOutlineLoading3Quarters
+                        className={cn("animate-spin", { hidden: !isPending })}
+                    />
                 </Button>
             </form>
         </Form>
-    )
+    );
 }

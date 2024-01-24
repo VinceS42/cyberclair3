@@ -1,14 +1,9 @@
 import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster"
-
 import "./globals.css"
+import { figtree } from "@/components/fonts"
 
-const poppins = Poppins({
-    subsets: ["latin"],
-    weight: ["400", "500", "600", "700"],
-    variable: "--font-poppins",
-})
 
 export const metadata: Metadata = {
     title: "Cyberclair3",
@@ -25,7 +20,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="fr">
-            <body className={poppins.className}>
+            <body className={figtree.className}>
                 {children}
                 <Toaster />
             </body>

@@ -1,24 +1,33 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useState, useTransition } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import * as z from "zod";
+import {
+    AtSymbolIcon,
+    LockClosedIcon,
+    PencilSquareIcon,
+    UserIcon,
+} from "@heroicons/react/24/outline";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { useState } from "react"
+} from "@/components/ui/form";
+import { cn } from "@/utils/utils";
 
 const FormSchema = z
     .object({
+        first_name: z.string(),
+        last_name: z.string(),
         email: z.string().email(),
         password: z.string().min(6, {
             message: "Mot de passe requis",
@@ -37,29 +46,36 @@ const FormSchema = z
     .refine((data) => data.password === data.confirm, {
         message: "Passwords don't match",
         path: ["confirm"], // path of error
-    })
+    });
 
 export default function RegisterForm({
     signUp,
 }: Readonly<{
-    signUp: (formData: FormData) => Promise<void>
+    signUp: (formData: FormData) => Promise<void>;
 }>) {
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isPending, startTransition] = useTransition();
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
+            first_name: "",
+            last_name: "",
             email: "",
             password: "",
             confirm: "",
         },
-    })
-
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    });
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        const formData = new FormData()
-        formData.append("email", data.email)
-        formData.append("password", data.password)
-        signUp(formData)
+        startTransition(async () => {
+            const formData = new FormData();
+            formData.append("first_name", data.first_name);
+            formData.append("last_name", data.last_name);
+            formData.append("email", data.email);
+            formData.append("password", data.password);
+            signUp(formData);
+        });
 
         // const { email, password } = data
 
@@ -85,14 +101,64 @@ export default function RegisterForm({
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="w-full space-y-6"
                 >
+                    <div className="flex gap-2 mt-9">
+                        <FormField
+                            control={form.control}
+                            name="first_name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="flex items-center">
+                                        <UserIcon className="w-5 h-5 mr-2" />
+                                        <p>Nom :</p>
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            autoComplete="family-name"
+                                            placeholder="Nom..."
+                                            {...field}
+                                            type="first_name"
+                                            onChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="last_name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="flex items-center">
+                                        <UserIcon className="w-5 h-5 mr-2" />
+                                        <p>Prénom :</p>
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            autoComplete="given-name"
+                                            placeholder="Prénom..."
+                                            {...field}
+                                            type="last_name"
+                                            onChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                     <FormField
                         control={form.control}
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel className="flex items-center">
+                                    <AtSymbolIcon className="w-5 h-5 mr-2" />
+                                    <p>Email :</p>
+                                </FormLabel>
                                 <FormControl>
                                     <Input
+                                        autoComplete="email"
                                         placeholder="exemple@gmail.com"
                                         {...field}
                                         type="email"
@@ -108,10 +174,14 @@ export default function RegisterForm({
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Password</FormLabel>
+                                <FormLabel className="flex items-center">
+                                    <LockClosedIcon className="w-5 h-5 mr-2" />
+                                    <p>Mot de passe :</p>
+                                </FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Password"
+                                        autoComplete="new-password"
+                                        placeholder="Mot de passe..."
                                         {...field}
                                         type="password"
                                         onChange={field.onChange}
@@ -126,9 +196,13 @@ export default function RegisterForm({
                         name="confirm"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Confirm</FormLabel>
+                                <FormLabel className="flex items-center">
+                                    <LockClosedIcon className="w-5 h-5 mr-2" />
+                                    Confirmez votre mot de passe :
+                                </FormLabel>
                                 <FormControl>
                                     <Input
+                                        autoComplete="new-password"
                                         placeholder="Confirmez votre password"
                                         {...field}
                                         type="password"
@@ -140,11 +214,18 @@ export default function RegisterForm({
                         )}
                     />
                     <Button type="submit" className="w-full flex gap-2">
-                        Enregistrer
+                        <PencilSquareIcon className="w-5 h-5 mr-3" />
+                        {/* Suite a un probleme sur vercel, tu peux aussi le faire comme ça <p>S&apos;inscrire</p> */}
+                        <p>S{"'"}inscrire</p>
+                        <AiOutlineLoading3Quarters
+                            className={cn("animate-spin", {
+                                hidden: !isPending,
+                            })}
+                        />
                     </Button>
                     {errorMessage && <p>{errorMessage}</p>}
                 </form>
             </Form>
         </div>
-    )
+    );
 }
