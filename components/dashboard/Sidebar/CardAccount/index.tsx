@@ -1,15 +1,11 @@
 "use client"
+
 import Image from "next/image"
-import {
-    ArrowRightStartOnRectangleIcon,
-    Cog6ToothIcon,
-} from "@heroicons/react/24/outline"
-import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
+import { LogOut, Settings } from "lucide-react"
 
 import BtnUpgrade from "../BtnUpgrade"
-import { useEffect } from "react"
-import { get } from "http"
+import { supabase } from "@/utils/supabase/client"
 
 type Props = {
     avatar: string
@@ -27,7 +23,6 @@ export default function CardAccount({
     isPremium,
 }: Readonly<Props>) {
     const router = useRouter()
-    const supabase = createClient()
 
     async function signOut() {
         const { error } = await supabase.auth.signOut()
@@ -39,47 +34,50 @@ export default function CardAccount({
     }
 
     return (
-        <div className="mb-3 shadow-xl">
-            <div className="p-2.5 bg-[#202324] rounded-xl">
-                <div className="flex items-center gap-x-2 text-white px-2.5 py-2.5 pb-4.5">
-                    <div className="relative min-w-10 min-h-10">
+        <div className="mb-3 shadow-xl ">
+            <div className="p-2.5 bg-cyberSecondary rounded-xl">
+                <div className="flex items-center justify-between gap-x-2 text-white px-2.5 py-2.5 pb-4.5">
+                    <div className="relative flex flex-row min-w-10 min-h-10 gap-x-3 w-full">
                         <Image
                             src={avatar}
                             alt="Nico le beaugoss"
-                            className="rounded-full object-cover"
+                            className="rounded-full object-cover h-10 w-10"
+                            width={100}
+                            height={100}
                             sizes="100vw"
-                            fill
                         />
-                    </div>
-                    <div>
-                        <div className="flex flex-row gap-x-1 font-semibold text-sm">
-                            <span>{firstName}</span>
-                            <span>{lastName}</span>
-                        </div>
-                        <div className="font-medium text-xs text-[#e8ecef]/[.5]">
-                            <span>{email}</span>
-                        </div>
-                    </div>
-                    <div className="flex self-start h-full">
-                        <div className="bg-green-500 rounded-lg px-3 py-0.5">
-                            <span className="text-black text-xs font-semibold">
-                                {isPremium ? "Premium" : "Free"}
-                            </span>
+                        <div className="flex flex-col w-full">
+                            <div className="flex flex-row gap-x-1 font-semibold text-sm">
+                                <span>{firstName}</span>
+                                <span>{lastName}</span>
+                                <div className="flex self-start h-full ml-auto">
+                                    <div className="bg-lightGreen rounded-lg px-3">
+                                        <span className="text-black text-xs font-semibold">
+                                            {isPremium ? "Pro" : "Free"}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="font-medium text-sm text-cyberTextSecondary mt-1">
+                                <span>{email}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-row">
+                <div className="flex flex-row gap-x-4">
                     <button
                         onClick={signOut}
-                        className="flex gap-x-2 items-center w-full h-12 font-semibold transition-colors hover:text-[#0084ff] text-sm"
+                        className="flex gap-x-1 items-center justify-end w-full h-12 font-medium group"
                     >
-                        <ArrowRightStartOnRectangleIcon className="h-5 w-5 opacity-30" />
-                        <span>Log out</span>
-                    </button>
-                    <button className="flex gap-x-2 items-center w-full h-12 font-semibold text-sm group">
-                        <Cog6ToothIcon className="h-5 w-5 opacity-30 group-hover:opacity-100 transition duration-100 ease-in-out" />
+                        <LogOut className="h-5 w-5 opacity-30 group-hover:opacity-100 transition duration-100 ease-in-out" />
                         <span className="text-white opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out">
-                            Settings
+                            Déconnexion
+                        </span>
+                    </button>
+                    <button className="flex gap-x-1 items-center justify-start w-full h-12 font-medium group">
+                        <Settings className="h-5 w-5 opacity-30 group-hover:opacity-100 transition duration-100 ease-in-out" />
+                        <span className="text-white opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out">
+                            Paramètres
                         </span>
                     </button>
                 </div>

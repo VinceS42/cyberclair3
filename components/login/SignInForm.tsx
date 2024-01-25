@@ -1,16 +1,11 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useTransition } from "react";
-import {
-    ArrowRightEndOnRectangleIcon,
-    AtSymbolIcon,
-    LockClosedIcon,
-} from "@heroicons/react/24/outline";
-import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { useTransition } from "react"
+import * as z from "zod"
+import { Mail, Lock, LogIn, Loader2 } from "lucide-react"
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
@@ -18,23 +13,29 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { toast } from "@/components/ui/use-toast";
-import { cn } from "@/utils/utils";
+} from "@/components/ui/form"
+import { toast } from "@/components/ui/use-toast"
 
 const FormSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(1, {
-        message: "Password is required.",
+    email: z.string().email({
+        message: "Veuillez entrer une adresse email valide.",
     }),
-});
+    password: z
+        .string()
+        .min(1, {
+            message: "Veuillez entrer un mot de passe.",
+        })
+        .length(6, {
+            message: "Votre mot de passe doit contenir au moins 6 caractères.", // TODO: mettre 8 caractères minimum
+        }),
+})
 
 export default function SignInForm({
     signIn,
 }: Readonly<{
-    signIn: (formData: FormData) => Promise<void>;
+    signIn: (formData: FormData) => Promise<void>
 }>) {
-    const [isPending, startTransition] = useTransition();
+    const [isPending, startTransition] = useTransition()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -42,16 +43,16 @@ export default function SignInForm({
             email: "",
             password: "",
         },
-    });
+    })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
         startTransition(async () => {
-            const formData = new FormData();
-            formData.append("email", data.email);
-            formData.append("password", data.password);
+            const formData = new FormData()
+            formData.append("email", data.email)
+            formData.append("password", data.password)
 
-            signIn(formData);
-        });
+            signIn(formData)
+        })
 
         toast({
             title: "You submitted the following values:",
@@ -62,7 +63,7 @@ export default function SignInForm({
                     </code>
                 </pre>
             ),
-        });
+        })
     }
 
     return (
@@ -77,13 +78,14 @@ export default function SignInForm({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel className="flex items-center">
-                                <AtSymbolIcon className="w-5 h-5 mr-2" />
-                                <p>Email :</p>
+                                <Mail className="w-5 h-5 mr-2" />
+                                <p className="text-base">Email :</p>
                             </FormLabel>
                             <FormControl>
                                 <Input
+                                    className="bg-white text-black"
                                     autoComplete="email"
-                                    placeholder="exemple@gmail.com"
+                                    placeholder="test03@gmail.com"
                                     {...field}
                                     type="email"
                                     onChange={field.onChange}
@@ -99,16 +101,17 @@ export default function SignInForm({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel className="flex items-center">
-                                <LockClosedIcon className="w-5 h-5 mr-2" />
-                                <p>Mot de passe :</p>
+                                <Lock className="w-5 h-5 mr-2" />
+                                <p className="text-base">Mot de passe :</p>
                             </FormLabel>
                             <FormControl>
                                 <Input
-                                    autoComplete="current-password"
-                                    placeholder="Mot de passe..."
+                                    className="bg-white text-black"
+                                    placeholder="azerty"
                                     {...field}
                                     type="password"
                                     onChange={field.onChange}
+                                    autoComplete="current-password"
                                 />
                             </FormControl>
 
@@ -116,14 +119,22 @@ export default function SignInForm({
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full flex gap-2">
-                    <ArrowRightEndOnRectangleIcon className="w-5 h-5 mr-3" />
-                    <p>Connexion</p>
-                    <AiOutlineLoading3Quarters
-                        className={cn("animate-spin", { hidden: !isPending })}
-                    />
+                <Button
+                    type="submit"
+                    className="w-full flex gap-2 text-white text-base"
+                >
+                    {!isPending ? (
+                        <LogIn className="w-5 h-5" />
+                    ) : (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                    )}
+                    {isPending ? (
+                        <span className="opacity-50">Connexion...</span>
+                    ) : (
+                        "Connexion"
+                    )}
                 </Button>
             </form>
         </Form>
-    );
+    )
 }

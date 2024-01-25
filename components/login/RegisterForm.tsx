@@ -1,19 +1,13 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState, useTransition } from "react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import * as z from "zod";
-import {
-    AtSymbolIcon,
-    LockClosedIcon,
-    PencilSquareIcon,
-    UserIcon,
-} from "@heroicons/react/24/outline";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { useState, useTransition } from "react"
+import * as z from "zod"
+import { User, Mail, Lock, UserPlus, Loader2 } from "lucide-react"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
     Form,
     FormControl,
@@ -21,40 +15,35 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { cn } from "@/utils/utils";
+} from "@/components/ui/form"
+import { supabase } from "@/utils/supabase/client"
 
 const FormSchema = z
     .object({
         first_name: z.string(),
         last_name: z.string(),
-        email: z.string().email(),
+        email: z.string().email({
+            message: "Veuillez entrer une adresse email valide.",
+        }),
         password: z.string().min(6, {
-            message: "Mot de passe requis",
+            message: "Le mot de passe doit contenir au moins 6 caractères",
         }),
         confirm: z.string().min(6, {
-            message: "Le mot de passe ne correspond pas",
+            message: "Le mot de passe doit contenir au moins 6 caractères",
         }),
     })
-
-    /* la méthode refine() est utilisée pour s'assurer que la valeur du champ confirm est égale à la valeur du champ password.
-     * Si cette condition n'est pas remplie, une erreur de validation est générée avec le message "Password did not match",
-     * et le chemin de l'erreur est spécifié comme ["confirm"].
-     * refine() est une fonctionnalité spécifique à la bibliothèque Zod qui permet d'ajouter des validations personnalisées à un schéma de données.
-     *
-     */
     .refine((data) => data.password === data.confirm, {
-        message: "Passwords don't match",
-        path: ["confirm"], // path of error
-    });
+        message: "Les mots de passe ne correspondent pas",
+        path: ["confirm"],
+    })
 
 export default function RegisterForm({
     signUp,
 }: Readonly<{
-    signUp: (formData: FormData) => Promise<void>;
+    signUp: (formData: FormData) => Promise<void>
 }>) {
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [isPending, startTransition] = useTransition();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const [isPending, startTransition] = useTransition()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -65,31 +54,31 @@ export default function RegisterForm({
             password: "",
             confirm: "",
         },
-    });
+    })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         startTransition(async () => {
-            const formData = new FormData();
-            formData.append("first_name", data.first_name);
-            formData.append("last_name", data.last_name);
-            formData.append("email", data.email);
-            formData.append("password", data.password);
-            signUp(formData);
-        });
+            const formData = new FormData()
+            formData.append("first_name", data.first_name)
+            formData.append("last_name", data.last_name)
+            formData.append("email", data.email)
+            formData.append("password", data.password)
+            signUp(formData)
+        })
 
-        // const { email, password } = data
+        const { email, password } = data
 
-        // let { error } = await supabase.auth.signUp({
-        //     email: email,
-        //     password: password,
-        // })
+        let { error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+        })
 
-        // if (error) {
-        //     setErrorMessage(error.message)
-        // } else {
-        //     setErrorMessage(null)
-        //     console.log("Signup success!")
-        // }
+        if (error) {
+            setErrorMessage(error.message)
+        } else {
+            setErrorMessage(null)
+            console.log("Signup success!")
+        }
     }
 
     return (
@@ -107,14 +96,15 @@ export default function RegisterForm({
                             name="first_name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="flex items-center">
-                                        <UserIcon className="w-5 h-5 mr-2" />
-                                        <p>Nom :</p>
+                                    <FormLabel className="flex items-center gap-x-2">
+                                        <User className="w-5 h-5" />
+                                        <p className="text-base">Nom :</p>
                                     </FormLabel>
                                     <FormControl>
                                         <Input
+                                            className="bg-white text-black"
                                             autoComplete="family-name"
-                                            placeholder="Nom..."
+                                            placeholder="Nom"
                                             {...field}
                                             type="first_name"
                                             onChange={field.onChange}
@@ -129,14 +119,15 @@ export default function RegisterForm({
                             name="last_name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="flex items-center">
-                                        <UserIcon className="w-5 h-5 mr-2" />
-                                        <p>Prénom :</p>
+                                    <FormLabel className="flex items-center gap-x-2">
+                                        <User className="w-5 h-5" />
+                                        <p className="text-base">Prénom :</p>
                                     </FormLabel>
                                     <FormControl>
                                         <Input
+                                            className="bg-white text-black"
                                             autoComplete="given-name"
-                                            placeholder="Prénom..."
+                                            placeholder="Prénom"
                                             {...field}
                                             type="last_name"
                                             onChange={field.onChange}
@@ -153,13 +144,14 @@ export default function RegisterForm({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="flex items-center">
-                                    <AtSymbolIcon className="w-5 h-5 mr-2" />
-                                    <p>Email :</p>
+                                    <Mail className="w-5 h-5 mr-2" />
+                                    <p className="text-base">Email :</p>
                                 </FormLabel>
                                 <FormControl>
                                     <Input
+                                        className="bg-white text-black"
                                         autoComplete="email"
-                                        placeholder="exemple@gmail.com"
+                                        placeholder="dupont@gmail.com"
                                         {...field}
                                         type="email"
                                         onChange={field.onChange}
@@ -174,14 +166,15 @@ export default function RegisterForm({
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="flex items-center">
-                                    <LockClosedIcon className="w-5 h-5 mr-2" />
-                                    <p>Mot de passe :</p>
+                                <FormLabel className="flex items-center gap-x-2">
+                                    <Lock className="w-5 h-5" />
+                                    <p className="text-base">Mot de passe :</p>
                                 </FormLabel>
                                 <FormControl>
                                     <Input
+                                        className="bg-white text-black"
                                         autoComplete="new-password"
-                                        placeholder="Mot de passe..."
+                                        placeholder="Mot de passe"
                                         {...field}
                                         type="password"
                                         onChange={field.onChange}
@@ -196,14 +189,17 @@ export default function RegisterForm({
                         name="confirm"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="flex items-center">
-                                    <LockClosedIcon className="w-5 h-5 mr-2" />
-                                    Confirmez votre mot de passe :
+                                <FormLabel className="flex items-center gap-x-2">
+                                    <Lock className="w-5 h-5" />
+                                    <p className="text-base">
+                                        Confirmez votre mot de passe :
+                                    </p>
                                 </FormLabel>
                                 <FormControl>
                                     <Input
+                                        className="bg-white text-black"
                                         autoComplete="new-password"
-                                        placeholder="Confirmez votre password"
+                                        placeholder="Confirmez votre mot de passe"
                                         {...field}
                                         type="password"
                                         onChange={field.onChange}
@@ -213,19 +209,24 @@ export default function RegisterForm({
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full flex gap-2">
-                        <PencilSquareIcon className="w-5 h-5 mr-3" />
-                        {/* Suite a un probleme sur vercel, tu peux aussi le faire comme ça <p>S&apos;inscrire</p> */}
-                        <p>S{"'"}inscrire</p>
-                        <AiOutlineLoading3Quarters
-                            className={cn("animate-spin", {
-                                hidden: !isPending,
-                            })}
-                        />
+                    <Button
+                        type="submit"
+                        className="w-full flex gap-2 text-white text-base"
+                    >
+                        {!isPending ? (
+                            <UserPlus className="w-5 h-5" />
+                        ) : (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        )}
+                        {isPending ? (
+                            <span className="opacity-50">Inscription...</span>
+                        ) : (
+                            "S'inscrire"
+                        )}
                     </Button>
                     {errorMessage && <p>{errorMessage}</p>}
                 </form>
             </Form>
         </div>
-    );
+    )
 }

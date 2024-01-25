@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 
 interface OAuthFormProps {
-    name: string;
+    name: string
 }
 
 export default function OAuthForm({ name }: OAuthFormProps) {
-    return <Button className="w-full">{name}</Button>;
+    return <Button className="w-full dark:text-white text-base">{name}</Button>
 }

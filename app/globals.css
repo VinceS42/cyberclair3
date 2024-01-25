@@ -68,9 +68,9 @@
 
 @layer base {
     * {
-        /* @apply border-border; */
+        @apply border-border;
     }
     body {
-        @apply bg-backgroundCyber text-foreground;
+        @apply bg-cyberPrimary text-foreground;
     }
 }

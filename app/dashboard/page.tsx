@@ -1,7 +1,8 @@
-import { LockOpenIcon } from "@heroicons/react/24/outline"
 
-import CardFeature from "../../components/dashboard/CardFeature"
-import Heading from "../../components/dashboard/Heading"
+import { AsteriskSquare } from "lucide-react"
+
+import CardFeature from "@/components/dashboard/CardFeature"
+import Heading from "@/components/dashboard/Heading"
 
 export default function Page() {
     return (
@@ -12,9 +13,9 @@ export default function Page() {
             />
             <div className="max-w-[30rem] mx-auto">
                 <CardFeature
-                    title="Vérification mot de passe"
+                    title="Vérifier mon mot de passe"
                     description="Vérifiez si votre mot de passe a été compromis"
-                    icon={<LockOpenIcon className="w-6 h-6 text-white" />}
+                    icon={<AsteriskSquare className="text-white" />}
                     href="/password-check"
                 />
             </div>

@@ -11,8 +11,10 @@ export default function Heading({
 }: Readonly<Props>) {
     return (
         <div className={`${align} mb-10`}>
-            <h1 className="text-5xl font-semibold mb-4">{title}</h1>
-            <p className="text-2xl text-[#6c7275]">{description}</p>
+            <h1 className="text-5xl font-semibold mb-4 text-cyberPrimary dark:text-white">
+                {title}
+            </h1>
+            <p className="text-2xl text-cyberTextSecondary">{description}</p>
         </div>
     )
 }

@@ -1,12 +1,12 @@
 import Image from "next/image"
 import Link from "next/link"
+import { Home, AsteriskSquare } from "lucide-react"
 
 import logo from "../../../public/assets/img/logo.svg"
 import nico from "../../../public/assets/img/Nico.png"
 import CardAccount from "./CardAccount"
 import ToggleTheme from "./ToggleTheme"
 import MenuItem from "../MenuItem"
-import { HomeModernIcon, LockClosedIcon } from "@heroicons/react/24/outline"
 
 const fakeUserData = {
     id: 1,
@@ -37,12 +37,12 @@ export default function Sidebar() {
             <div className="flex flex-col">
                 <MenuItem
                     title="Tableau de bord"
-                    icon={<HomeModernIcon className="text-white" />}
+                    icon={<Home className="text-white" />}
                     href="/dashboard"
                 />
                 <MenuItem
-                    title="Vérification mot de passe"
-                    icon={<LockClosedIcon className="text-white" />}
+                    title="Vérifier mon mot de passe"
+                    icon={<AsteriskSquare className="text-white" />}
                     href="dashboard/password-check"
                 />
             </div>

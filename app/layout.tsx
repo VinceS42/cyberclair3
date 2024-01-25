@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
-import { Poppins } from "next/font/google"
+
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 import { figtree } from "@/components/fonts"
-
+import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
     title: "Cyberclair3",
@@ -20,9 +20,16 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="fr">
-            <body className={figtree.className}>
-                {children}
-                <Toaster />
+            <body className={`${figtree.className}`}>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {children}
+                    <Toaster />
+                </ThemeProvider>
             </body>
         </html>
     )
