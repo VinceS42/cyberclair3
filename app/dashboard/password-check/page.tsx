@@ -1,4 +1,4 @@
-import Heading from "@/app/components/dashboard/Heading"
+import Heading from "@/components/dashboard/Heading"
 
 export default function Page() {
     return (

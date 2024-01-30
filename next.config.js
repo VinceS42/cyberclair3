@@ -1,4 +1,19 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+
+const nextConfig = {
+    reactStrictMode: true,
+    images: {
+        domains: ["images.unsplash.com", "res.cloudinary.com", "lh3.googleusercontent.com"],
+    },
+    async redirects() {
+        return [
+            {
+                source: "/",
+                destination: "/login",
+                permanent: true,
+            },
+        ]
+    },
+}
 
 module.exports = nextConfig
