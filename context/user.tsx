@@ -11,10 +11,10 @@ import React, {
 
 // Définis un type plus spécifique pour les données utilisateur si possible
 type User = {
-    id: string;
     email: string;
     first_name: string;
     last_name: string;
+    password: string;
 };
 
 type UserContextProps = {
@@ -45,11 +45,11 @@ export default function UserProvider({
     const [error, setError] = useState<Error | null>(null);
 
     function normalizeUserData(user: any) {
-        let id = user.id;
         let first_name = "";
         let last_name = "";
         let avatar = "";
         let email = user.email;
+        let password = user.password;
 
         if (user.user_metadata) {
             if (user.user_metadata.full_name) {
@@ -64,11 +64,11 @@ export default function UserProvider({
         }
 
         return {
-            id,
             first_name,
             last_name,
             email,
             avatar,
+            password,
         };
     }
 
@@ -150,6 +150,8 @@ export default function UserProvider({
             setLoading(false);
         }
     };
+
+
     const contextValue = useMemo(
         () => ({
             user,

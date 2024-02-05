@@ -1,22 +1,35 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { LogOut, Settings } from "lucide-react";
-
-import BtnUpgrade from "../BtnUpgrade";
 import { supabase } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+
 import { useSession } from "@/context/user";
 
-type Props = {    
+import { DialogHeader } from "@/components/ui/dialog";
+import {
+    LogOut,
+    Settings,
+    User,
+} from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+} from "@radix-ui/react-dialog";
+import BtnUpgrade from "../BtnUpgrade";
+import CardUpdate from "../UpdateProfil/CardUpdate";
+
+
+type Props = {
     isPremium: boolean;
 };
 
 export default function CardAccount({ isPremium }: Readonly<Props>) {
     const router = useRouter();
-
     const { user } = useSession();
-    
+
     // console.log(user);
 
     // if (user && "first_name" in user) {
@@ -41,14 +54,20 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
                 <div className="p-2.5 bg-cyberSecondary rounded-xl">
                     <div className="flex items-center justify-between gap-x-2 text-white px-2.5 py-2.5 pb-4.5">
                         <div className="relative flex flex-row min-w-10 min-h-10 gap-x-3 w-full">
-                            <Image
-                                src={user.avatar}
-                                alt="image de"
-                                className="rounded-full object-cover h-10 w-10"
-                                width={100}
-                                height={100}
-                                sizes="100vw"
-                            />
+                            {user.avatar ? (
+                                <Image
+                                    src={user.avatar}
+                                    alt="Image de l'utilisateur"
+                                    className="rounded-full object-cover h-10 w-10"
+                                    width={100}
+                                    height={100}
+                                    sizes="100vw"
+                                />
+                            ) : (
+                                <div className="rounded-full bg-gray-300 h-10 w-10 flex items-center justify-center">
+                                    <User className="h-6 w-6 text-gray-600" />
+                                </div>
+                            )}
                             <div className="flex flex-col w-full">
                                 <div className="flex flex-row gap-x-1 font-semibold text-sm">
                                     <span>{user.last_name}</span>
@@ -77,12 +96,21 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
                                 Déconnexion
                             </span>
                         </button>
-                        <button className="flex gap-x-1 items-center justify-start w-full h-12 font-medium group">
-                            <Settings className="h-5 w-5 opacity-30 group-hover:opacity-100 transition duration-100 ease-in-out" />
-                            <span className="text-white opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out">
-                                Paramètres
-                            </span>
-                        </button>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <button className="flex gap-x-1 items-center justify-start w-full h-12 font-medium group">
+                                    <Settings className="h-5 w-5 opacity-30 group-hover:opacity-100 transition duration-100 ease-in-out" />
+                                    <span className="text-white opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out">
+                                        Paramètres
+                                    </span>
+                                </button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:min-w-[425px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
+                                <DialogHeader>
+                                    <CardUpdate />
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                     <BtnUpgrade isPremium={isPremium} />
                 </div>

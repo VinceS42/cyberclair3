@@ -46,6 +46,7 @@ export const useSession = () => {
             setLoading(false);
         }
     };
+    
 
     return { users, loading, error, refreshSession  };
 };

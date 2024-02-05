@@ -14,3 +14,4 @@ export default function BtnUpgrade({ isPremium = false }: Readonly<Props>) {
         )
     )
 }
+
