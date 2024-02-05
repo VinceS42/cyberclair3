@@ -79,4 +79,13 @@ module.exports = {
         },
     },
     plugins: [require("tailwindcss-animate")],
-}
+    function({ addUtilities }) {
+        const newUtilities = {
+            ".backdrop-blur": {
+                backdropFilter: "blur(8px)", // Vous pouvez ajuster la valeur selon vos préférences
+            },
+        };
+
+        addUtilities(newUtilities, ["responsive", "hover"]);
+    },
+};

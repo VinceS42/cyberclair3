@@ -1,8 +1,9 @@
+"use client";
 
-import { AsteriskSquare } from "lucide-react"
+import { AsteriskSquare } from "lucide-react";
 
-import CardFeature from "@/components/dashboard/CardFeature"
-import Heading from "@/components/dashboard/Heading"
+import CardFeature from "@/components/dashboard/CardFeature";
+import Heading from "@/components/dashboard/Heading";
 
 export default function Page() {
     return (
@@ -20,5 +21,6 @@ export default function Page() {
                 />
             </div>
         </>
-    )
+    );
 }
+

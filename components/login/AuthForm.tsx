@@ -1,20 +1,29 @@
-"use client"
+"use client";
 
-import Image from "next/image"
+import Image from "next/image";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import SignInForm from "./SignInForm"
-import RegisterForm from "./RegisterForm"
-import OAuthForm from "./OAuthForm"
-import logo from "@/public/assets/img/logo.svg"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SignInForm from "./SignInForm";
+import RegisterForm from "./RegisterForm";
+import OAuthForm from "./OAuthForm";
+import logo from "@/public/assets/img/logo.svg";
+import { supabase } from "@/utils/supabase/client";
+import { useSession } from "@/context/user";
 
 export default function AuthForm({
     signIn,
     signUp,
 }: Readonly<{
-    signIn: (formData: FormData) => Promise<void>
-    signUp: (formData: FormData) => Promise<void>
+    signIn: (formData: FormData) => Promise<void>;
+    signUp: (formData: FormData) => Promise<void>;
 }>) {
+
+    const { signInWithOAuth } = useSession();
+
+    const handleLoginWithOAuth = (provider: "linkedin" | "google") => {
+        signInWithOAuth(provider)
+    }    
+
     return (
         <div className="w-full space-y-5">
             <div className="flex items-center justify-center gap-2">
@@ -47,10 +56,16 @@ export default function AuthForm({
                     <RegisterForm signUp={signUp} />
                 </TabsContent>
             </Tabs>
-            <div className="flex gap-5 pointer-events-none opacity-50">
-                <OAuthForm name="Google" />
-                <OAuthForm name="Linkedin" />
+            <div className="flex gap-5">
+                <OAuthForm
+                    name="Google"
+                    onClick={() => handleLoginWithOAuth("google")}
+                />
+                <OAuthForm
+                    name="Linkedin"
+                    onClick={() => handleLoginWithOAuth("linkedin")}
+                />
             </div>
         </div>
-    )
+    );
 }

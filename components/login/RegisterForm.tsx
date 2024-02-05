@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useState, useTransition } from "react"
-import * as z from "zod"
-import { User, Mail, Lock, UserPlus, Loader2 } from "lucide-react"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useState, useTransition } from "react";
+import * as z from "zod";
+import { User, Mail, Lock, UserPlus, Loader2 } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     Form,
     FormControl,
@@ -15,8 +15,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { supabase } from "@/utils/supabase/client"
+} from "@/components/ui/form";
 
 const FormSchema = z
     .object({
@@ -35,15 +34,15 @@ const FormSchema = z
     .refine((data) => data.password === data.confirm, {
         message: "Les mots de passe ne correspondent pas",
         path: ["confirm"],
-    })
+    });
 
 export default function RegisterForm({
     signUp,
 }: Readonly<{
-    signUp: (formData: FormData) => Promise<void>
+    signUp: (formData: FormData) => Promise<void>;
 }>) {
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
-    const [isPending, startTransition] = useTransition()
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isPending, startTransition] = useTransition();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -54,39 +53,33 @@ export default function RegisterForm({
             password: "",
             confirm: "",
         },
-    })
+    });
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         startTransition(async () => {
-            const formData = new FormData()
-            formData.append("first_name", data.first_name)
-            formData.append("last_name", data.last_name)
-            formData.append("email", data.email)
-            formData.append("password", data.password)
-            signUp(formData)
-        })
+            const formData = new FormData();
+            formData.append("first_name", data.first_name);
+            formData.append("last_name", data.last_name);
+            formData.append("email", data.email);
+            formData.append("password", data.password);
 
-        const { email, password } = data
+            try {
+                await signUp(formData);
 
-        let { error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-        })
-
-        if (error) {
-            setErrorMessage(error.message)
-        } else {
-            setErrorMessage(null)
-            console.log("Signup success!")
-        }
+                // Si signUp réussit, vous pouvez gérer ici les actions après l'inscription.
+                console.log("Signup success!");
+                setErrorMessage(null);
+            } catch (error: any) {
+                // Si signUp échoue, vous pouvez gérer ici les erreurs.
+                setErrorMessage(error.message);
+            }
+        });
     }
 
     return (
         <div className="">
             <Form {...form}>
                 <form
-                    action="../../auth/signup"
-                    method="POST"
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="w-full space-y-6"
                 >
@@ -224,9 +217,11 @@ export default function RegisterForm({
                             "S'inscrire"
                         )}
                     </Button>
-                    {errorMessage && <p>{errorMessage}</p>}
+                    {errorMessage && (
+                        <p className="text-white">{errorMessage}</p>
+                    )}
                 </form>
             </Form>
         </div>
-    )
+    );
 }

@@ -1,9 +1,10 @@
-import type { Metadata } from "next"
+import type { Metadata } from "next";
 
-import { Toaster } from "@/components/ui/toaster"
-import "./globals.css"
-import { figtree } from "@/components/fonts"
-import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster";
+import "./globals.css";
+import { figtree } from "@/components/fonts";
+import { ThemeProvider } from "@/components/theme-provider";
+import UserProvider from "@/context/user";
 
 export const metadata: Metadata = {
     title: "Cyberclair3",
@@ -11,12 +12,12 @@ export const metadata: Metadata = {
     icons: {
         icon: "/assets/img/Nico.png",
     },
-}
+};
 
 export default function RootLayout({
     children,
 }: Readonly<{
-    children: React.ReactNode
+    children: React.ReactNode;
 }>) {
     return (
         <html lang="fr">
@@ -27,10 +28,10 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <UserProvider>{children}</UserProvider>
                     <Toaster />
                 </ThemeProvider>
             </body>
         </html>
-    )
+    );
 }
