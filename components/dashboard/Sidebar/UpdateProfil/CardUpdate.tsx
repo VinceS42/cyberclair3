@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { updateUser } from "@/lib/service";
+// import { updateUser } from "@/lib/service";
 
 const FormProfilSchema = z.object({
     first_name: z.string(),
@@ -71,7 +71,7 @@ export default function CardUpdate() {
     const handleSubmit = async (values: UpdateUserFormValues) => {
         try {
             setIsLoading(true);
-            updateUser(values);
+            // updateUser(values);
         } catch (error) {
             console.log(error);
         } finally {
@@ -79,12 +79,12 @@ export default function CardUpdate() {
         }
     };
 
-    console.log(user);
+    // console.log(user);
 
     return (
-        <div>
+      
             <div className="w-full space-y-5 border rounded-xl bg-black">
-                <Tabs defaultValue="update" className="p-9  w-full">
+                <Tabs defaultValue="update" className="p-9 w-full">
                     <TabsList className="relative grid w-full grid-cols-2 mb-6 p-1 bg-[#202324] ">
                         <TabsTrigger
                             value="profil"
@@ -333,6 +333,6 @@ export default function CardUpdate() {
                 </Tabs>
                 <div className="flex gap-5"></div>
             </div>
-        </div>
+       
     );
 }

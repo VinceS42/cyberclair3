@@ -3,24 +3,20 @@
 import Image from "next/image";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
 
 import { useSession } from "@/context/user";
 
-import { DialogHeader } from "@/components/ui/dialog";
-import {
-    LogOut,
-    Settings,
-    User,
-} from "lucide-react";
 import {
     Dialog,
     DialogContent,
+    DialogHeader,
     DialogTrigger,
-} from "@radix-ui/react-dialog";
+} from "@/components/ui/dialog";
+import { LogOut, Settings, User } from "lucide-react";
+
 import BtnUpgrade from "../BtnUpgrade";
 import CardUpdate from "../UpdateProfil/CardUpdate";
-
+import CardPack from "../Packs/CardPack";
 
 type Props = {
     isPremium: boolean;
@@ -105,14 +101,14 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
                                     </span>
                                 </button>
                             </DialogTrigger>
-                            <DialogContent className="sm:min-w-[425px] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
+                            <DialogContent className="sm:min-w-[425px] w-4 p-0 m-0">
                                 <DialogHeader>
                                     <CardUpdate />
                                 </DialogHeader>
                             </DialogContent>
                         </Dialog>
                     </div>
-                    <BtnUpgrade isPremium={isPremium} />
+                    <BtnUpgrade />
                 </div>
             </div>
         )

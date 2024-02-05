@@ -49,7 +49,7 @@ export default function Login({
             <div className="w-96 border-2 border-cyberBorder rounded-xl p-6">
                 <AuthForm signIn={handleSignIn} signUp={signUp} />
                 {searchParams?.message && (
-                    <p className="mt-4 p-2 bg-foreground/10 text-foreground text-center text-sm">
+                    <p className="mt-4 p-2 bg-foreground/10 border rounded-lg text-foreground text-center text-sm text-white">
                         {searchParams.message}
                     </p>
                 )}
