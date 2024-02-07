@@ -18,7 +18,7 @@ const fakeUserData = {
 
 export default function Sidebar() {
     return (
-        <div className="fixed z-20 top-0 left-0 bottom-0 flex flex-col pt-10 px-4 max-md:invisible max-md:opacity-0 max-md:transition-opacity max-md:w-16 max-md:px-0 max-md:pb-30 max-md:justify-center md:px-4 w-80 pb-58">
+        <div className="fixed z-20 top-0 left-0 bottom-0 flex flex-col pt-10 px-5Z max-md:invisible max-md:opacity-0 max-md:transition-opacity max-md:w-16 max-md:px-0 max-md:pb-30 max-md:justify-center md:px-4 w-80 pb-58">
             <div className="flex items-center h-30 pb-6">
                 <Link
                     href="/dashboard"
@@ -46,7 +46,7 @@ export default function Sidebar() {
                     href="dashboard/password-check"
                 />
             </div>
-            <div className="absolute text-white left-0 bottom-0 right-0 pb-6 px-4 before:left-0 before:right-0 before:bottom-full before:h-10 before:bg-gradient-to-t before:from-[#131617] before:to-[#131617] before:pointer-events-none max-md:px-3">
+            <div className="absolute text-white left-0 bottom-0 right-0 pb-6 px-3 before:left-0 before:right-0 before:bottom-full before:h-10 before:bg-gradient-to-t before:from-[#131617] before:to-[#131617] before:pointer-events-none max-md:px-3">
                 <CardAccount isPremium={fakeUserData.isPremium} />
                 <ToggleTheme />
             </div>

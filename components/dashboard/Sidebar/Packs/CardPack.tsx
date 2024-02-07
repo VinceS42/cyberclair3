@@ -9,6 +9,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import Packs from "./Packs";
+import { useSession } from "@/context/user";
 
 // Type pour les données de pack
 type PackType = {
@@ -34,8 +35,6 @@ export default function CardPack() {
         loadData();
     }, []);
 
-    console.log(packs);
-
     return (
         <Card className=" w-full space-y-5 border rounded-xl bg-black">
             <CardHeader>
@@ -47,9 +46,7 @@ export default function CardPack() {
             <CardContent className="flex flex-col">
                 <ul>
                     <div className="flex gap-4 text-white ">
-                        {packs.map((pack) => (
-                            <Packs key={pack.id} pack={pack} />
-                        ))}
+                        <Packs />
                     </div>
                 </ul>
             </CardContent>

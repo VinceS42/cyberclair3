@@ -1,14 +1,14 @@
 "use client";
 
-import Image from "next/image";
+import { useSession } from "@/context/user";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SignInForm from "./SignInForm";
 import RegisterForm from "./RegisterForm";
 import OAuthForm from "./OAuthForm";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import logo from "@/public/assets/img/logo.svg";
-import { supabase } from "@/utils/supabase/client";
-import { useSession } from "@/context/user";
+
+import Image from "next/image";
 
 export default function AuthForm({
     signIn,

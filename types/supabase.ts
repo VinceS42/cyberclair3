@@ -6,12 +6,12 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       compagny: {
         Row: {
-          billing_adress: string | null
+          billing_address: string | null
           company_name: string | null
           id: string
           siren: string | null
@@ -19,7 +19,7 @@ export interface Database {
           tva: number | null
         }
         Insert: {
-          billing_adress?: string | null
+          billing_address?: string | null
           company_name?: string | null
           id?: string
           siren?: string | null
@@ -27,7 +27,7 @@ export interface Database {
           tva?: number | null
         }
         Update: {
-          billing_adress?: string | null
+          billing_address?: string | null
           company_name?: string | null
           id?: string
           siren?: string | null
@@ -47,7 +47,7 @@ export interface Database {
         }
         Insert: {
           amount?: number | null
-          created_at?: string
+          created_at: string
           id?: string
           payment_method?: string | null
           status?: string | null
@@ -71,7 +71,7 @@ export interface Database {
           name_modul: string | null
         }
         Insert: {
-          created_at?: string
+          created_at: string
           description?: string | null
           id?: string
           name_modul?: string | null
@@ -86,24 +86,90 @@ export interface Database {
       }
       pack: {
         Row: {
-          created_at: string
+          description: string | null
           id: string
           name_pack: string | null
           price: number | null
         }
         Insert: {
-          created_at?: string
+          description?: string | null
           id?: string
           name_pack?: string | null
           price?: number | null
         }
         Update: {
-          created_at?: string
+          description?: string | null
           id?: string
           name_pack?: string | null
           price?: number | null
         }
         Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string | null
+          id: string
+          id_company: string | null
+          is_active: boolean | null
+          last_name: string | null
+          password: string | null
+          role: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_status: boolean | null
+          update_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name?: string | null
+          id: string
+          id_company?: string | null
+          is_active?: boolean | null
+          last_name?: string | null
+          password?: string | null
+          role?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_status?: boolean | null
+          update_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          id_company?: string | null
+          is_active?: boolean | null
+          last_name?: string | null
+          password?: string | null
+          role?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_status?: boolean | null
+          update_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_company_fkey"
+            columns: ["id_company"]
+            isOneToOne: false
+            referencedRelation: "compagny"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       rel_modul_pack: {
         Row: {
@@ -167,85 +233,30 @@ export interface Database {
       }
       subscription: {
         Row: {
-          end_subscriptionn: string | null
+          end_subscription: string | null
           id: string
-          id_user: string | null
+          id_profile: string | null
           payment_method: string | null
           start_subscription: string
           status: string | null
         }
         Insert: {
-          end_subscriptionn?: string | null
+          end_subscription?: string | null
           id?: string
-          id_user?: string | null
+          id_profile?: string | null
+          payment_method?: string | null
+          start_subscription: string
+          status?: string | null
+        }
+        Update: {
+          end_subscription?: string | null
+          id?: string
+          id_profile?: string | null
           payment_method?: string | null
           start_subscription?: string
           status?: string | null
         }
-        Update: {
-          end_subscriptionn?: string | null
-          id?: string
-          id_user?: string | null
-          payment_method?: string | null
-          start_subscription?: string
-          status?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "subscription_id_user_fkey"
-            columns: ["id_user"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      users: {
-        Row: {
-          created_at: string | null
-          email: string
-          first_name: string | null
-          id: string
-          id_company: string | null
-          is_active: boolean | null
-          last_name: string | null
-          password: string | null
-          role: string | null
-          update_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email: string
-          first_name?: string | null
-          id?: string
-          id_company?: string | null
-          is_active?: boolean | null
-          last_name?: string | null
-          password?: string | null
-          role?: string | null
-          update_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email?: string
-          first_name?: string | null
-          id?: string
-          id_company?: string | null
-          is_active?: boolean | null
-          last_name?: string | null
-          password?: string | null
-          role?: string | null
-          update_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "users_id_company_fkey"
-            columns: ["id_company"]
-            isOneToOne: false
-            referencedRelation: "compagny"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
     }
     Views: {

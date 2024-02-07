@@ -12,7 +12,7 @@ export default function Login({
 }>) {
 
     const handleSignIn = async (formData: FormData) => {
-        "use server"
+        "use server";
         // Appel à la fonction signIn exportée
         await signInUser(formData);
     };

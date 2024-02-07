@@ -1,29 +1,56 @@
 "use server";
 
-import Stripe from "stripe";
+import { supabase } from "@/utils/supabase/client";
+import { Stripe } from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SK_KEY!);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string, {
+    apiVersion: "2023-10-16",
+    typescript: true,
+});
 
-export async function createCheckout(
-    email: string,
-    priceId: string,
-    redirectTo: string
-) {
-    // On utilise l'API de Stripe pour créer une session de paiement et on JSON.stringify le résultat pour le renvoyer au client vu que l'on est en mode server.
-
+export async function checkout(email: string, redirectTo: string) {
     return JSON.stringify(
         await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
-            mode: "subscription",
             customer_email: email,
+            mode: "subscription",
+            payment_method_types: ["card"],
             line_items: [
                 {
-                    price: priceId,
+                    price: process.env.PRO_PRICE_ID,
                     quantity: 1,
                 },
             ],
-            success_url: redirectTo || `${process.env.SITE_URL}/dashboard`,
-            cancel_url: process.env.SITE_URL,
+            success_url: redirectTo || process.env.NEXT_PUBLIC_BASE_URL,
+            cancel_url: process.env.NEXT_PUBLIC_BASE_URL,
         })
     );
+}
+
+export async function createStripeCustomerForUser(
+    supabaseUserId: string
+): Promise<string> {
+    try {
+        // Je créez le client Stripe et je stocke l'ID utilisateur Supabase
+        const customer = await stripe.customers.create({
+            metadata: { supabaseUserId },
+        });
+
+        // Récupérez l'ID du client Stripe créé
+        const stripeCustomerId = customer.id;
+
+        const { data, error } = await supabase
+            .from("profiles")
+            .update({ stripe_customer_id: stripeCustomerId })
+            .eq("stripe_customer_id", supabaseUserId);
+
+        if (error) {
+            console.error("Error updating profiles:", error);
+            throw error;
+        }
+
+        return stripeCustomerId;
+    } catch (error) {
+        console.error("Error creating Stripe customer:", error);
+        throw error; // Propagez l'erreur pour gestion externe
+    }
 }

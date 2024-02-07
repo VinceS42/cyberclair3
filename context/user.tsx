@@ -15,6 +15,8 @@ type User = {
     first_name: string;
     last_name: string;
     password: string;
+    stripe_customer_id: string;
+    role: string;
 };
 
 type UserContextProps = {
@@ -49,7 +51,9 @@ export default function UserProvider({
         let last_name = "";
         let avatar = "";
         let email = user.email;
+        let role = user.role;
         let password = user.password;
+        let stripe_customer_id = "";
 
         if (user.user_metadata) {
             if (user.user_metadata.full_name) {
@@ -67,8 +71,10 @@ export default function UserProvider({
             first_name,
             last_name,
             email,
+            role,
             avatar,
             password,
+            stripe_customer_id,
         };
     }
 
@@ -150,7 +156,6 @@ export default function UserProvider({
             setLoading(false);
         }
     };
-
 
     const contextValue = useMemo(
         () => ({

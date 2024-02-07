@@ -46,7 +46,7 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
 
     return (
         user && (
-            <div className="mb-3 shadow-xl ">
+            <div className="mb-3 shadow-xl">
                 <div className="p-2.5 bg-cyberSecondary rounded-xl">
                     <div className="flex items-center justify-between gap-x-2 text-white px-2.5 py-2.5 pb-4.5">
                         <div className="relative flex flex-row min-w-10 min-h-10 gap-x-3 w-full">
