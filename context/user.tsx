@@ -11,16 +11,17 @@ import React, {
 
 // Définis un type plus spécifique pour les données utilisateur si possible
 type User = {
-    email: string;
     first_name: string;
     last_name: string;
+    email: string;
+    role: string;
+    avatar: string;
     password: string;
     stripe_customer_id: string;
-    role: string;
-};
+} | null;
 
 type UserContextProps = {
-    user: any | null;
+    user: User | null;
     setUser: (user: User) => void;
     loading: boolean;
     error: Error | null;
@@ -46,7 +47,12 @@ export default function UserProvider({
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
-    function normalizeUserData(user: any) {
+    function normalizeUserData(user: any): User {
+        if (!user) {
+            console.error("L'objet utilisateur est undefined.");
+            return null; // ou retourner une valeur par défaut / gérer l'erreur différemment
+        }
+
         let first_name = "";
         let last_name = "";
         let avatar = "";
@@ -115,7 +121,15 @@ export default function UserProvider({
                     // console.log("Raw user data from onAuthStateChange:", user);
 
                     const normalizedUser = normalizeUserData(user);
-                    setUser(normalizedUser);
+                    if (normalizedUser) {
+                        setUser(normalizedUser);
+                    } else {
+                        // Gérer le cas où normalizedUser est null ou undefined
+                        console.error(
+                            "Erreur lors de la normalisation des données utilisateur"
+                        );
+                        setUser(null); // ou une autre action appropriée
+                    }
                 }
             } catch (error) {
                 console.error(error);
