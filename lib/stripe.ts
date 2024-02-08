@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string, {
     typescript: true,
 });
 
-export async function checkout(email: string, redirectTo: string) {
+export async function checkout(email: string, redirectTo: string, priceId: string) {
     return JSON.stringify(
         await stripe.checkout.sessions.create({
             customer_email: email,
@@ -16,7 +16,7 @@ export async function checkout(email: string, redirectTo: string) {
             payment_method_types: ["card"],
             line_items: [
                 {
-                    price: process.env.PRO_PRICE_ID,
+                    price: priceId,
                     quantity: 1,
                 },
             ],

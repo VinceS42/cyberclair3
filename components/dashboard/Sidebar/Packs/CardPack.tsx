@@ -9,32 +9,25 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import Packs from "./Packs";
-import { useSession } from "@/context/user";
+import { getStripeData } from "@/app/produitStripe/fetchData";
+import { PlanType } from "@/types/supabase";
 
-// Type pour les données de pack
-type PackType = {
-    id: string;
-    name: string;
-    descritpion: string;
-    price: string;
-};
 
 export default function CardPack() {
-    const [packs, setPacks] = useState<PackType[]>([]);
+    const [plans, setPlans] = useState<PlanType[]>([]);
 
     useEffect(() => {
-        async function loadData() {
-            const { data, error } = await supabase.from("pack").select("*");
-            if (error) {
-                console.error("Error fetching packs:", error);
-                return;
-            }
-            setPacks(data);
-        }
 
-        loadData();
+        // On récupère les données directement de stripe
+        const fetchPlans = async () => {
+            const stripePlans = await getStripeData();
+            setPlans(stripePlans);
+        };
+
+        fetchPlans();
     }, []);
 
+    console.log(plans);
     return (
         <Card className=" w-full space-y-5 border rounded-xl bg-black">
             <CardHeader>
@@ -46,7 +39,11 @@ export default function CardPack() {
             <CardContent className="flex flex-col">
                 <ul>
                     <div className="flex gap-4 text-white ">
-                        <Packs />
+                        {plans.map((plan) => (
+                            <li key={plan.id}>
+                                <Packs plan={plan} />
+                            </li>
+                        ))}
                     </div>
                 </ul>
             </CardContent>
