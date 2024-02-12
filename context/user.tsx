@@ -13,6 +13,7 @@ import React, {
 type User = {
     first_name: string;
     last_name: string;
+    newEmail: string;
     email: string;
     role: string;
     avatar: string;
@@ -57,6 +58,7 @@ export default function UserProvider({
         let last_name = "";
         let avatar = "";
         let email = user.email;
+        let newEmail = user.newEmail;
         let role = user.role;
         let password = user.password;
         let stripe_customer_id = "";
@@ -77,6 +79,7 @@ export default function UserProvider({
             first_name,
             last_name,
             email,
+            newEmail,
             role,
             avatar,
             password,
@@ -183,12 +186,8 @@ export default function UserProvider({
         }),
         [
             user,
-            setUser,
             loading,
             error,
-            refreshSession,
-            signInWithOAuth,
-            normalizeUserData,
         ]
     );
 

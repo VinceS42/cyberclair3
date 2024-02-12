@@ -10,25 +10,31 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Loader2, Lock, Mail, Save, User } from "lucide-react";
+import { Loader2, Lock, Mail, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-// import { updateUser } from "@/lib/service";
+import { updateUserEmail } from "@/lib/service";
 
-const FormProfilSchema = z.object({
-    first_name: z.string(),
-    last_name: z.string(),
-    email: z.string().email({
-        message: "Veuillez entrer une adresse email valide.",
-    }),
-    password: z.string().min(6, {
-        message: "Le mot de passe doit contenir au moins 6 caractères",
-    }),
-});
+const FormProfilSchema = z
+    .object({
+        email: z.string().email({
+            message: "Veuillez entrer une adresse email valide.",
+        }),
+        confirmEmail: z.string().email({
+            message: "Veuillez entrer une adresse email valide.",
+        }),
+        password: z.string().min(6, {
+            message: "Le mot de passe doit contenir au moins 6 caractères",
+        }),
+    })
+    .refine((data) => data.email === data.confirmEmail, {
+        message: "Les adresses email ne correspondent pas",
+        path: ["confirmEmail"], // Indiquez le chemin de l'élément qui doit être marqué en cas d'erreur
+    });
 
 const FormPasswordSchema = z
     .object({
@@ -44,7 +50,7 @@ const FormPasswordSchema = z
         path: ["confirm"],
     });
 
-type UpdateUserFormValues = z.infer<typeof FormPasswordSchema>;
+type UpdateUserFormValues = z.infer<typeof FormProfilSchema>;
 
 export default function CardUpdate() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -53,10 +59,13 @@ export default function CardUpdate() {
 
     const formProfil = useForm<z.infer<typeof FormProfilSchema>>({
         resolver: zodResolver(FormProfilSchema),
+        mode: "onSubmit",
         defaultValues: {
-            first_name: "",
-            last_name: "",
-            email: "",
+            // first_name: "",
+            // last_name: "",
+            email: user?.email || "", // Utilisez l'email de l'utilisateur comme valeur par défaut si disponible
+            confirmEmail: user?.email || "", // Utilisez l'email de l'utilisateur comme valeur par défaut si disponible
+            password: "", // Initialiser le champ de mot de passe avec une chaîne vide
         },
     });
 
@@ -68,10 +77,15 @@ export default function CardUpdate() {
         },
     });
 
-    const handleSubmit = async (values: UpdateUserFormValues) => {
+    console.log(user);
+
+    const handleSubmitEmail = async (values: UpdateUserFormValues) => {
         try {
             setIsLoading(true);
-            // updateUser(values);
+            await updateUserEmail(values.email, {
+                email: user?.email || "",
+                password: values.password,
+            });
         } catch (error) {
             console.log(error);
         } finally {
@@ -79,12 +93,10 @@ export default function CardUpdate() {
         }
     };
 
-    // console.log(user);
-
     return (
-      
+        <div>
             <div className="w-full space-y-5 border rounded-xl bg-black">
-                <Tabs defaultValue="update" className="p-9 w-full">
+                <Tabs defaultValue="update" className="p-9  w-full">
                     <TabsList className="relative grid w-full grid-cols-2 mb-6 p-1 bg-[#202324] ">
                         <TabsTrigger
                             value="profil"
@@ -103,10 +115,12 @@ export default function CardUpdate() {
                         <div className="">
                             <Form {...formProfil}>
                                 <form
-                                    onSubmit={(e) => {}}
+                                    onSubmit={formProfil.handleSubmit(
+                                        handleSubmitEmail
+                                    )}
                                     className="w-full space-y-6"
                                 >
-                                    <div className="flex gap-2 mt-9">
+                                    {/* <div className="flex gap-2 mt-9">
                                         <FormField
                                             control={formProfil.control}
                                             name="first_name"
@@ -161,7 +175,7 @@ export default function CardUpdate() {
                                                 </FormItem>
                                             )}
                                         />
-                                    </div>
+                                    </div> */}
                                     <FormField
                                         control={formProfil.control}
                                         name="email"
@@ -170,16 +184,68 @@ export default function CardUpdate() {
                                                 <FormLabel className="flex items-center">
                                                     <Mail className="w-5 h-5 mr-2" />
                                                     <p className="text-base">
-                                                        Email :
+                                                        Nouvel email :
                                                     </p>
                                                 </FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         className="bg-white text-black"
                                                         autoComplete="email"
-                                                        placeholder="dupont@gmail.com"
-                                                        {...field}
+                                                        placeholder="Entrez votre nouvel email"
                                                         type="email"
+                                                        onChange={
+                                                            field.onChange
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={formProfil.control}
+                                        name="confirmEmail"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex items-center gap-x-2">
+                                                    <Lock className="w-5 h-5" />
+                                                    <p className="text-base">
+                                                        Confirmez votre email :
+                                                    </p>
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        className="bg-white text-black"
+                                                        placeholder="Confirmez votre adresse email"
+                                                        type="email"
+                                                        onChange={
+                                                            field.onChange
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={formProfil.control}
+                                        name="password"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex items-center gap-x-2">
+                                                    <Lock className="w-5 h-5" />
+                                                    <p className="text-base">
+                                                        Mot de passe :
+                                                    </p>
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        className="bg-white text-black"
+                                                        autoComplete="new-password"
+                                                        placeholder="Mot de passe"
+                                                        {...field}
+                                                        type="password"
                                                         onChange={
                                                             field.onChange
                                                         }
@@ -230,14 +296,14 @@ export default function CardUpdate() {
                                                 <FormLabel className="flex items-center gap-x-2">
                                                     <Lock className="w-5 h-5" />
                                                     <p className="text-base">
-                                                        Mot de passe :
+                                                       Entrez votre nouveau mot de passe :
                                                     </p>
                                                 </FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         className="bg-white text-black"
                                                         autoComplete="new-password"
-                                                        placeholder="Mot de passe"
+                                                        placeholder="Nouveau mot de passe"
                                                         {...field}
                                                         type="password"
                                                         onChange={
@@ -285,7 +351,7 @@ export default function CardUpdate() {
                                                 <FormLabel className="flex items-center gap-x-2">
                                                     <Lock className="w-5 h-5" />
                                                     <p className="text-base">
-                                                        Nouveau mot de passe :
+                                                        Mot de passe actuel :
                                                     </p>
                                                 </FormLabel>
                                                 <FormControl>
@@ -333,6 +399,6 @@ export default function CardUpdate() {
                 </Tabs>
                 <div className="flex gap-5"></div>
             </div>
-       
+        </div>
     );
 }

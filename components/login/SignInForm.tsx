@@ -15,6 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { toast } from "@/components/ui/use-toast"
+import { signInUser } from "@/lib/service"
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -52,7 +53,7 @@ export default function SignInForm({
             formData.append("email", data.email)
             formData.append("password", data.password)
 
-            signIn(formData)
+            signInUser(formData)
         })
 
         toast({

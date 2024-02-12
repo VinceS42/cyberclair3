@@ -4,8 +4,6 @@ import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 
-
-
 export const createSupabaseServerClient = (
     cookieStore: ReturnType<typeof cookies>
 ) => {
