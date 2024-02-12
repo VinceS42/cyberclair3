@@ -23,12 +23,9 @@ const FormSchema = z.object({
     }),
     password: z
         .string()
-        .min(1, {
+        .min(8, {
             message: "Veuillez entrer un mot de passe.",
         })
-        .length(6, {
-            message: "Votre mot de passe doit contenir au moins 6 caractères.", // TODO: mettre 8 caractères minimum
-        }),
 })
 
 export default function SignInForm({

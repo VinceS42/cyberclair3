@@ -74,24 +74,35 @@ export const updateUserEmail = async (
     }
 };
 
-// export const updateUserPassword = async (newPassword?: string {email, password}: {email: string, password: string}) => {
-//     try {
-//         // Préparation de l'objet de mise à jour en incluant uniquement les champs fournis
-//         const updates: { email?: string; password?: string } = {};
-//         // if (newEmail) updates.email = newEmail;
-//         if (newPassword) updates.password = newPassword;
+export const updateUserPassword = async (
+    newPassword: string,
+    {
+        email,
+        password,
+    }: {
+        email: string;
+        password: string;
+    }
+) => {
+    try {
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+        const cookieStore = cookies();
+        const supabase = createSupabaseServerClient(cookieStore);
 
-//         // Mise à jour de l'utilisateur avec les champs fournis
-//         const { data, error } = await supabase.auth.updateUser(updates);
+        // Authentifiez d'abord l'utilisateur avec l'email et le mot de passe actuels
+        await signInUserForUpdate(formData);
 
-//         if (error) {
-//             throw error; // Lance une exception si une erreur survient
-//         }
-
-//         // Retourne la donnée mise à jour si l'opération réussit sans erreur
-//         return { data, error: null };
-//     } catch (error) {
-//         console.error(error); // Affiche l'erreur dans la console
-//         return { error }; // Retourne l'erreur pour un traitement ultérieur
-//     }
-// };
+        // Mise à jour de l'email avec Supabase
+        const { data, error } = await supabase.auth.updateUser({
+            password: newPassword,
+        });
+        if (error) {
+            throw error;
+        }
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};

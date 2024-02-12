@@ -1,6 +1,11 @@
 "use client";
-
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useSession } from "@/context/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+import { updateUserEmail, updateUserPassword } from "@/lib/service";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Form,
@@ -10,14 +15,12 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Loader2, Lock, Mail, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { updateUserEmail } from "@/lib/service";
+
+import { Loader2, Lock, Mail, Save } from "lucide-react";
+
+//////////////////////////////// Pour le Mail //////////////////////////////////////
 
 const FormProfilSchema = z
     .object({
@@ -36,50 +39,45 @@ const FormProfilSchema = z
         path: ["confirmEmail"], // Indiquez le chemin de l'élément qui doit être marqué en cas d'erreur
     });
 
+type UpdateUserEmailFormValues = z.infer<typeof FormProfilSchema>;
+
+//////////////////////////////// Pour le Mot de passe //////////////////////////////////////
+
 const FormPasswordSchema = z
     .object({
         password: z.string().min(6, {
             message: "Le mot de passe doit contenir au moins 6 caractères",
         }),
-        confirm: z.string().min(6, {
+        newPassword: z.string().min(6, {
+            message: "Le mot de passe doit contenir au moins 6 caractères",
+        }),
+        confirmNewPassword: z.string().min(6, {
             message: "Le mot de passe doit contenir au moins 6 caractères",
         }),
     })
-    .refine((data) => data.password === data.confirm, {
+    .refine((data) => data.newPassword === data.confirmNewPassword, {
         message: "Les mots de passe ne correspondent pas",
-        path: ["confirm"],
+        path: ["confirmNewPassword"],
     });
 
-type UpdateUserFormValues = z.infer<typeof FormProfilSchema>;
+type UpdateUserPasswordFormValues = z.infer<typeof FormPasswordSchema>;
+
+//******************************** Début de la Fonction ********************************//
 
 export default function CardUpdate() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useSession();
 
+    //////////////////////////////// Pour le Mail //////////////////////////////////////
+
     const formProfil = useForm<z.infer<typeof FormProfilSchema>>({
         resolver: zodResolver(FormProfilSchema),
         mode: "onSubmit",
-        defaultValues: {
-            // first_name: "",
-            // last_name: "",
-            email: user?.email || "", // Utilisez l'email de l'utilisateur comme valeur par défaut si disponible
-            confirmEmail: user?.email || "", // Utilisez l'email de l'utilisateur comme valeur par défaut si disponible
-            password: "", // Initialiser le champ de mot de passe avec une chaîne vide
-        },
+    
     });
 
-    const formPassword = useForm<z.infer<typeof FormPasswordSchema>>({
-        resolver: zodResolver(FormPasswordSchema),
-        defaultValues: {
-            password: "",
-            confirm: "",
-        },
-    });
-
-    console.log(user);
-
-    const handleSubmitEmail = async (values: UpdateUserFormValues) => {
+    const handleSubmitEmail = async (values: UpdateUserEmailFormValues) => {
         try {
             setIsLoading(true);
             await updateUserEmail(values.email, {
@@ -92,6 +90,37 @@ export default function CardUpdate() {
             setIsLoading(false);
         }
     };
+
+    //////////////////////////////// Pour le Mot de passe //////////////////////////////////////
+
+    const formPassword = useForm<z.infer<typeof FormPasswordSchema>>({
+        resolver: zodResolver(FormPasswordSchema),       
+    });
+
+    const handleSubmitPassword = async (
+        values: UpdateUserPasswordFormValues
+    ) => {
+        try {
+            setIsLoading(true);
+            // Assurez-vous de passer un objet avec les clés attendues par updateUserPassword
+            await updateUserPassword(
+                values.newPassword, // Utilisez la nouvelle valeur de mot de passe sous la clé attendue
+                {
+                    email: user?.email || "",
+                    password: values.password, // Le mot de passe actuel de l'utilisateur
+                }
+            );
+        } catch (error) {
+            console.error(error); // Gérer l'erreur ici, par exemple en mettant à jour l'état d'erreur
+            setErrorMessage(
+                "Une erreur est survenue lors de la mise à jour du mot de passe."
+            );
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    console.log(user);
 
     return (
         <div>
@@ -120,62 +149,9 @@ export default function CardUpdate() {
                                     )}
                                     className="w-full space-y-6"
                                 >
-                                    {/* <div className="flex gap-2 mt-9">
-                                        <FormField
-                                            control={formProfil.control}
-                                            name="first_name"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="flex items-center gap-x-2">
-                                                        <User className="w-5 h-5" />
-                                                        <p className="text-base">
-                                                            Nom :
-                                                        </p>
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            className="bg-white text-black"
-                                                            autoComplete="family-name"
-                                                            placeholder="Nom"
-                                                            {...field}
-                                                            type="first_name"
-                                                            onChange={
-                                                                field.onChange
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={formProfil.control}
-                                            name="last_name"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="flex items-center gap-x-2">
-                                                        <User className="w-5 h-5" />
-                                                        <p className="text-base">
-                                                            Prénom :
-                                                        </p>
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            className="bg-white text-black"
-                                                            autoComplete="given-name"
-                                                            placeholder="Prénom"
-                                                            {...field}
-                                                            type="last_name"
-                                                            onChange={
-                                                                field.onChange
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div> */}
+                                    <h2 className="text-white text-lg">
+                                        Adresse actuelle : {user?.email}
+                                    </h2>
                                     <FormField
                                         control={formProfil.control}
                                         name="email"
@@ -285,18 +261,21 @@ export default function CardUpdate() {
                         <div className="">
                             <Form {...formPassword}>
                                 <form
-                                    onSubmit={() => {}}
+                                    onSubmit={formPassword.handleSubmit(
+                                        handleSubmitPassword
+                                    )}
                                     className="w-full space-y-6"
                                 >
                                     <FormField
                                         control={formPassword.control}
-                                        name="password"
+                                        name="newPassword"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel className="flex items-center gap-x-2">
                                                     <Lock className="w-5 h-5" />
                                                     <p className="text-base">
-                                                       Entrez votre nouveau mot de passe :
+                                                        Entrez votre nouveau mot
+                                                        de passe :
                                                     </p>
                                                 </FormLabel>
                                                 <FormControl>
@@ -317,7 +296,7 @@ export default function CardUpdate() {
                                     />
                                     <FormField
                                         control={formPassword.control}
-                                        name="confirm"
+                                        name="confirmNewPassword"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel className="flex items-center gap-x-2">
@@ -357,8 +336,7 @@ export default function CardUpdate() {
                                                 <FormControl>
                                                     <Input
                                                         className="bg-white text-black"
-                                                        autoComplete="new-password"
-                                                        placeholder="Mot de passe"
+                                                        placeholder="*******"
                                                         {...field}
                                                         type="password"
                                                         onChange={
