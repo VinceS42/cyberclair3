@@ -43,6 +43,7 @@ export default function RegisterForm({
 }>) {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isPending, startTransition] = useTransition();
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -169,7 +170,9 @@ export default function RegisterForm({
                                         autoComplete="new-password"
                                         placeholder="Mot de passe"
                                         {...field}
-                                        type="password"
+                                        type={
+                                            showPassword ? "text" : "password"
+                                        }
                                         onChange={field.onChange}
                                     />
                                 </FormControl>
@@ -194,7 +197,9 @@ export default function RegisterForm({
                                         autoComplete="new-password"
                                         placeholder="Confirmez votre mot de passe"
                                         {...field}
-                                        type="password"
+                                        type={
+                                            showPassword ? "text" : "password"
+                                        }
                                         onChange={field.onChange}
                                     />
                                 </FormControl>
@@ -202,6 +207,11 @@ export default function RegisterForm({
                             </FormItem>
                         )}
                     />
+                    <div onClick={() => setShowPassword(!showPassword)}>
+                        <p className="text-sm text-white cursor-pointer hover:underline">
+                            Rendre le mot de passe visible
+                        </p>
+                    </div>
                     <Button
                         type="submit"
                         className="w-full flex gap-2 text-white text-base"

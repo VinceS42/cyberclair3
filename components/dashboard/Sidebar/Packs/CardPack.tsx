@@ -27,9 +27,9 @@ export default function CardPack() {
         fetchPlans();
     }, []);
 
-    console.log(plans);
+    
     return (
-        <Card className=" w-full space-y-5 border rounded-xl bg-black">
+        <Card className="w-full space-y-5 border rounded-xl bg-black">
             <CardHeader>
                 <CardTitle className="text-white">Pack</CardTitle>
                 <CardDescription className="text-white">
@@ -38,7 +38,7 @@ export default function CardPack() {
             </CardHeader>
             <CardContent className="flex flex-col">
                 <ul>
-                    <div className="flex gap-4 text-white ">
+                    <div className="flex gap-4 text-white">
                         {plans.map((plan) => (
                             <li key={plan.id}>
                                 <Packs plan={plan} />
