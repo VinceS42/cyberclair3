@@ -1,6 +1,6 @@
 import ResetPassword from "@/components/login/ResetPassword/ResetPassword";
 
-export default function Login({
+export default function Reset({
     searchParams,
 }: Readonly<{
     searchParams: { message: string };

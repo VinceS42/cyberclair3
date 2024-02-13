@@ -22,7 +22,7 @@ type User = {
 } | null;
 
 type UserContextProps = {
-    user: User | null;
+    user: User | any;
     setUser: (user: User) => void;
     loading: boolean;
     error: Error | null;
@@ -32,10 +32,10 @@ type UserContextProps = {
 
 const UserContext = createContext<UserContextProps>({
     user: null,
+    error: null,
+    loading: true,
     setUser: () => {},
     refreshSession: () => {},
-    loading: true,
-    error: null,
     signInWithOAuth: () => {},
 });
 
@@ -144,9 +144,15 @@ export default function UserProvider({
 
         supabase.auth.onAuthStateChange((event, session) => {
             setLoading(true);
-            if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+            if (
+                event === "SIGNED_IN" ||
+                event === "USER_UPDATED" ||
+                event === "PASSWORD_RECOVERY"
+            ) {
                 const user = session?.user;
-                const normalizedUser = normalizeUserData(user);
+                const normalizedUser = session?.user
+                    ? normalizeUserData(user)
+                    : null;
                 setUser(normalizedUser);
             }
             setLoading(false);
@@ -184,11 +190,7 @@ export default function UserProvider({
             signInWithOAuth,
             normalizeUserData,
         }),
-        [
-            user,
-            loading,
-            error,
-        ]
+        [user, loading, error]
     );
 
     return (

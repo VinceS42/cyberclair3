@@ -148,8 +148,8 @@ export const updateUserPassword = async (
     }
 };
 
-//**************************/ RESET PASSWORD USER /***************************//
-// Service pour reset le mot de passe d'un utilisateur
+//**************************/ EMAIL FOR RESET PASSWORD USER /***************************//
+// Service d'envoi d'email pour reset le mot de passe d'un utilisateur
 
 export const sendResetPassword = async (email: string) => {
     try {
@@ -164,6 +164,23 @@ export const sendResetPassword = async (email: string) => {
             throw error;
         }
         return data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+//**************************/ CONFIRM RESET PASSWORD USER /***************************//
+// Servic pour reset le mot de passe d'un utilisateur
+
+export const confirmResetPassword = async (
+    newPassword: string,
+) => {
+    try {
+        const { data, error } = await supabase.auth.updateUser({
+            password: newPassword,
+        });
+        if (data) console.log("Mot de passe mis à jour avec succès:", data);
+        if (error) console.log("Erreur de mise à jour du mot de passe:", error);
     } catch (error) {
         throw error;
     }

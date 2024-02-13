@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button";
 import logo from "@/public/assets/img/logo.svg";
 import { Loader2, Lock, Save } from "lucide-react";
 import Image from "next/image";
+import { confirmResetPassword, updateUserPassword } from "@/lib/service";
+import { supabase } from "@/utils/supabase/client";
 
 //////////////////////////////// Pour le Mot de passe //////////////////////////////////////
 
@@ -43,17 +45,38 @@ export default function ResetPassword() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [accessToken, setAccessToken] = useState<string | null>(null); // Ajoutez cet état pour stocker le token d'accès
 
     //////////////////////////////// Pour Reset le Mot de passe //////////////////////////////////////
 
     const formResetPassword = useForm<z.infer<typeof FormPasswordSchema>>({
         resolver: zodResolver(FormPasswordSchema),
+        defaultValues: {
+            password: "", // Valeur initiale définie à une chaîne vide
+            confirmPassword: "", // Valeur initiale définie à une chaîne vide
+        },
     });
 
-    const handleSubmitResetPassword = async (values: ResetPasswordFormValues) => {
+    useEffect(() => {
+        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'PASSWORD_RECOVERY') {
+                // Vous pouvez stocker le token d'accès ici pour l'utiliser lors de la mise à jour du mot de passe
+                setAccessToken(session?.access_token || null);
+            }
+        });
+
+        return () => {
+            authListener.subscription.unsubscribe();
+        };
+    }, []);
+
+
+    const handleSubmitResetPassword = async (
+        values: ResetPasswordFormValues
+    ) => {
         try {
             setIsLoading(true);
-            
+            await updateUserPassword(values.email, values.password);
         } catch (error) {
             console.error(error); // Gérer l'erreur ici, par exemple en mettant à jour l'état d'erreur
             setErrorMessage(
@@ -76,7 +99,9 @@ export default function ResetPassword() {
             </div>
             <Form {...formResetPassword}>
                 <form
-                    onSubmit={formResetPassword.handleSubmit(handleSubmitResetPassword)}
+                    onSubmit={formResetPassword.handleSubmit(
+                        handleSubmitResetPassword
+                    )}
                     className="w-full space-y-6"
                 >
                     <FormField
