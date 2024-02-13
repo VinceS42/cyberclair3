@@ -5,7 +5,10 @@ import { useSession } from "@/context/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { updateUserEmail, updateUserPassword } from "@/lib/service";
+import {
+    updateUserEmail,
+    updateUserPassword,
+} from "@/lib/service";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Form,
@@ -19,6 +22,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { Loader2, Lock, Mail, Save } from "lucide-react";
+import UpdateAvatars from "./UpdateAvatars";
+import { supabase } from "@/utils/supabase/client";
+import { toast } from "@/components/ui/use-toast";
 
 //////////////////////////////// Pour le Mail //////////////////////////////////////
 
@@ -66,6 +72,8 @@ type UpdateUserPasswordFormValues = z.infer<typeof FormPasswordSchema>;
 
 export default function CardUpdate() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useSession();
 
@@ -102,7 +110,6 @@ export default function CardUpdate() {
     ) => {
         try {
             setIsLoading(true);
-            // Assurez-vous de passer un objet avec les clés attendues par updateUserPassword
             await updateUserPassword(
                 values.newPassword, // Utilisez la nouvelle valeur de mot de passe sous la clé attendue
                 {
@@ -120,15 +127,70 @@ export default function CardUpdate() {
         }
     };
 
+    //**************************/ UPDATE AVATAR_URL /***************************//
+
+    const updateAvatarUrl = async (url: string) => {
+        const { user } = useSession();
+
+        const { error } = await supabase
+            .from("profiles")
+            .update({ avatar_url: url })
+            .eq("id", user?.id);
+        if (error) {
+            toast({
+                title: "Error",
+                description: error.message,
+                duration: 9000,
+            });
+        }
+        toast({
+            title: "Avatar url updated",
+            duration: 9000,
+        });
+    };
+
+    //**************************/ UPLOAD AIMAGE DANS LE STORAGE /***************************//
+
+    const uploadAvatar = async (event: any) => {
+        const { user } = useSession();
+        if (!event.target.files || event.target.files.length === 0) {
+            throw new Error("You must select an image to upload.");
+        }
+
+        setUploading(true);
+        const file = event.target.files[0];
+        const fileExt = file.name.split(".").pop();
+        const filePath = `${user?.email}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from("avatars")
+            .upload(filePath, file);
+
+        if (uploadError) {
+            setUploading(false);
+            throw uploadError;
+        }
+
+        updateAvatarUrl(filePath);
+        setAvatarUrl(filePath);
+        setUploading(false);
+    };
+
     return (
         <div className="w-full space-y-5 border rounded-xl bg-black">
-            <Tabs defaultValue="update" className="p-9  w-full">
-                <TabsList className="relative grid w-full grid-cols-2 mb-6 p-1 bg-[#202324] ">
+            <Tabs defaultValue="update" className="p-9 w-full">
+                <TabsList className="relative grid w-full grid-cols-3 mb-6 p-1 bg-[#202324] ">
                     <TabsTrigger
                         value="profil"
                         className="relative z-1 group basis-1/2 font-semibold transition-colors hover:text-n-1"
                     >
-                        Editer votre profil
+                        Profil
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="avatar"
+                        className="relative z-1 group basis-1/2 font-semibold transition-colors hover:text-n-1"
+                    >
+                        Avatar
                     </TabsTrigger>
                     <TabsTrigger
                         value="password"
@@ -222,6 +284,40 @@ export default function CardUpdate() {
                                         </FormItem>
                                     )}
                                 />
+                                <Button
+                                    type="submit"
+                                    className="w-full flex gap-2 text-white text-base"
+                                >
+                                    {!isLoading ? (
+                                        <Save className="w-5 h-5" />
+                                    ) : (
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                    )}
+                                    {isLoading ? (
+                                        <span className="opacity-50">
+                                            Modification...
+                                        </span>
+                                    ) : (
+                                        "Modifier"
+                                    )}
+                                </Button>
+                                {errorMessage && (
+                                    <p className="text-white">{errorMessage}</p>
+                                )}
+                            </form>
+                        </Form>
+                    </div>
+                </TabsContent>
+                <TabsContent value="avatar">
+                    <div className="">
+                        <Form {...formPassword}>
+                            <form
+                                onSubmit={formPassword.handleSubmit(
+                                    handleSubmitPassword
+                                )}
+                                className="w-full space-y-6"
+                            >
+                                <UpdateAvatars />
                                 <Button
                                     type="submit"
                                     className="w-full flex gap-2 text-white text-base"

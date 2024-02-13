@@ -1,9 +1,11 @@
 "use server";
-
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies, headers } from "next/headers";
 import { createSupabaseServerClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
+import { useSession } from "@/context/user";
+import { toast } from "@/components/ui/use-toast";
 
 //**************************/ SIGN UP USER /***************************//
 
@@ -15,6 +17,9 @@ export const signUp = async (formData: FormData) => {
     const first_name = formData.get("first_name") as string;
     const last_name = formData.get("last_name") as string;
     const password = formData.get("password") as string;
+
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
     const { data, error } = await supabase.auth.signUp({
         email,
@@ -29,7 +34,9 @@ export const signUp = async (formData: FormData) => {
         return redirect("/login?message=Could not authenticate user");
     }
 
-    return redirect("/login?message=Check email to continue sign in process");
+    return redirect(
+        "/login?message=Verifiez votre boite mail pour activer votre compte."
+    );
 };
 
 //**************************/ SIGN IN USER /***************************//
@@ -184,7 +191,6 @@ export const confirmResetPassword = async (newPassword: string) => {
     }
 };
 
-
 //**************************/ 2MFA /***************************//
 // Servic pour activer l'authentification à deux facteurs
 
@@ -201,3 +207,4 @@ async function startMfaEnrollment() {
     // `data` contient le QR code et le secret que vous devez montrer à l'utilisateur
     console.log("QR Code pour l’enrôlement MFA:", data.totp.qr_code);
 }
+
