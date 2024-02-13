@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import logo from "@/public/assets/img/logo.svg";
 import { Loader2, Lock, Save } from "lucide-react";
 import Image from "next/image";
-import { confirmResetPassword, updateUserPassword } from "@/lib/service";
+import { confirmResetPassword } from "@/lib/service";
 import { supabase } from "@/utils/supabase/client";
 
 //////////////////////////////// Pour le Mot de passe //////////////////////////////////////
@@ -76,7 +76,7 @@ export default function ResetPassword() {
     ) => {
         try {
             setIsLoading(true);
-            await updateUserPassword(values.email, values.password);
+            await confirmResetPassword(values.password);
         } catch (error) {
             console.error(error); // Gérer l'erreur ici, par exemple en mettant à jour l'état d'erreur
             setErrorMessage(

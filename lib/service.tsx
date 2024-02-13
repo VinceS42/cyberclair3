@@ -172,9 +172,7 @@ export const sendResetPassword = async (email: string) => {
 //**************************/ CONFIRM RESET PASSWORD USER /***************************//
 // Servic pour reset le mot de passe d'un utilisateur
 
-export const confirmResetPassword = async (
-    newPassword: string,
-) => {
+export const confirmResetPassword = async (newPassword: string) => {
     try {
         const { data, error } = await supabase.auth.updateUser({
             password: newPassword,
@@ -185,3 +183,21 @@ export const confirmResetPassword = async (
         throw error;
     }
 };
+
+
+//**************************/ 2MFA /***************************//
+// Servic pour activer l'authentification à deux facteurs
+
+async function startMfaEnrollment() {
+    const { data, error } = await supabase.auth.mfa.enroll({
+        factorType: "totp",
+    });
+
+    if (error) {
+        console.error("Erreur lors de l’enrôlement MFA:", error);
+        return;
+    }
+
+    // `data` contient le QR code et le secret que vous devez montrer à l'utilisateur
+    console.log("QR Code pour l’enrôlement MFA:", data.totp.qr_code);
+}
