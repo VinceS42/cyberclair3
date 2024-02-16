@@ -7,16 +7,18 @@ import React, {
     useMemo,
     useContext,
     useEffect,
+    use,
 } from "react";
 
 // Définis un type plus spécifique pour les données utilisateur si possible
 type User = {
+    id: string;
     first_name: string;
     last_name: string;
     newEmail: string;
     email: string;
     role: string;
-    avatar: string;
+    avatar_url: string;
     password: string;
     stripe_customer_id: string;
 } | null;
@@ -53,10 +55,10 @@ export default function UserProvider({
             console.error("L'objet utilisateur est undefined.");
             return null; // ou retourner une valeur par défaut / gérer l'erreur différemment
         }
-
-        let first_name = "";
-        let last_name = "";
-        let avatar = "";
+        let id = user.id;
+        let first_name = user.first_name || "";
+        let last_name = user.last_name || "";
+        let avatar_url = user.avatar_url || "";
         let email = user.email;
         let newEmail = user.newEmail;
         let role = user.role;
@@ -68,7 +70,6 @@ export default function UserProvider({
                 const names = user.user_metadata.full_name.split(" ");
                 first_name = names[0];
                 last_name = names.slice(1).join(" ");
-                avatar = user.user_metadata.avatar_url;
             } else {
                 first_name = user.user_metadata.first_name || "";
                 last_name = user.user_metadata.last_name || "";
@@ -76,12 +77,13 @@ export default function UserProvider({
         }
 
         return {
+            id,
             first_name,
             last_name,
             email,
             newEmail,
             role,
-            avatar,
+            avatar_url,
             password,
             stripe_customer_id,
         };
@@ -119,19 +121,29 @@ export default function UserProvider({
                     setError(error);
                 } else {
                     const user = session?.user;
+                    if (user) {
+                        // Requête supplémentaire pour récupérer l'avatar_url depuis votre table de profils
+                        const { data: profileData, error: profileError } =
+                            await supabase
+                                .from("profiles")
+                                .select("avatar_url")
+                                .eq("id", user.id)
+                                .single(); // Utilisez .single() pour obtenir un seul enregistrement
 
-                    // ce console.log est utile pour voir les données brutes de l'utilisateur
-                    // console.log("Raw user data from onAuthStateChange:", user);
+                        if (profileError) {
+                            console.error(
+                                "Erreur lors de la récupération de l'avatar:",
+                                profileError
+                            );
+                        }
+                        // Mise à jour de user avec avatar_url récupéré
+                        const updatedUser = {
+                            ...session.user,
+                            avatar_url: profileData?.avatar_url, // Assurez-vous que cette propriété existe dans votre table
+                        };
 
-                    const normalizedUser = normalizeUserData(user);
-                    if (normalizedUser) {
+                        const normalizedUser = normalizeUserData(updatedUser);
                         setUser(normalizedUser);
-                    } else {
-                        // Gérer le cas où normalizedUser est null ou undefined
-                        console.error(
-                            "Erreur lors de la normalisation des données utilisateur"
-                        );
-                        setUser(null); // ou une autre action appropriée
                     }
                 }
             } catch (error) {
@@ -192,7 +204,6 @@ export default function UserProvider({
         }),
         [user, loading, error]
     );
-
     return (
         <UserContext.Provider value={contextValue}>
             {children}

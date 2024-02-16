@@ -16,7 +16,6 @@ import { LogOut, Settings, User } from "lucide-react";
 
 import BtnUpgrade from "../BtnUpgrade";
 import CardUpdate from "../UpdateProfil/CardUpdate";
-import CardPack from "../Packs/CardPack";
 
 type Props = {
     isPremium: boolean;
@@ -25,7 +24,7 @@ type Props = {
 export default function CardAccount({ isPremium }: Readonly<Props>) {
     const router = useRouter();
     const { user } = useSession();
-
+    console.log("User ID:", user);
     // console.log(user);
 
     // if (user && "first_name" in user) {
@@ -50,9 +49,9 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
                 <div className="p-2.5 bg-cyberSecondary rounded-xl">
                     <div className="flex items-center justify-between gap-x-2 text-white px-2.5 py-2.5 pb-4.5">
                         <div className="relative flex flex-row min-w-10 min-h-10 gap-x-3 w-full">
-                            {user.avatar ? (
+                            {user.avatar_url ? (
                                 <Image
-                                    src={user.avatar}
+                                    src={user.avatar_url}
                                     alt="Image de l'utilisateur"
                                     className="rounded-full object-cover h-10 w-10"
                                     width={100}
