@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import * as z from "zod";
-import { User, Mail, Lock, UserPlus, Loader2 } from "lucide-react";
 
+import { User, Mail, Lock, UserPlus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {

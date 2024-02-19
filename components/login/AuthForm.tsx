@@ -1,16 +1,19 @@
 "use client";
 
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useSession } from "@/context/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { sendResetPassword } from "@/lib/service";
 
 import SignInForm from "./SignInForm";
 import RegisterForm from "./RegisterForm";
+import Image from "next/image";
 import OAuthForm from "./OAuthForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import logo from "@/public/assets/img/logo.svg";
 
-import Image from "next/image";
-import { useState } from "react";
-import ResetPassword from "./ResetPassword/ResetPassword";
 import {
     Form,
     FormControl,
@@ -19,13 +22,9 @@ import {
     FormLabel,
     FormMessage,
 } from "../ui/form";
-import { Loader2, Lock, Mail, Save } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { sendResetPassword } from "@/lib/service";
+import { Loader2, Lock, Mail, Save } from "lucide-react";
 
 const FormSchema = z
     .object({

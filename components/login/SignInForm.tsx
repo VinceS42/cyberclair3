@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import * as z from "zod";
-import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
+import { signInUser } from "@/lib/service";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
-import { signInUser } from "@/lib/service";
+import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
 
 const FormSchema = z.object({
     email: z.string().email({

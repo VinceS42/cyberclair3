@@ -4,8 +4,6 @@ import { cookies, headers } from "next/headers";
 import { createSupabaseServerClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
-import { useSession } from "@/context/user";
-import { toast } from "@/components/ui/use-toast";
 
 //**************************/ SIGN UP USER /***************************//
 

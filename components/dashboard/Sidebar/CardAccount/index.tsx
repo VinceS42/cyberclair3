@@ -24,14 +24,7 @@ type Props = {
 export default function CardAccount({ isPremium }: Readonly<Props>) {
     const router = useRouter();
     const { user } = useSession();
-    console.log("User ID:", user);
-    // console.log(user);
 
-    // if (user && "first_name" in user) {
-    //     console.log(user.first_name);
-    // } else {
-    //     console.log("first_name property does not exist on user object");
-    // }
 
     async function signOut() {
         const { error } = await supabase.auth.signOut();
@@ -41,7 +34,6 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
             router.push("/");
         }
     }
-    // console.log("Image URL:", user?.avatar);
 
     return (
         user && (

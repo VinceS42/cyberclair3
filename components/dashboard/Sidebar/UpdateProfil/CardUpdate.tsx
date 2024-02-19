@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSession } from "@/context/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useSession } from "@/context/user";
 
 import { updateUserEmail, updateUserPassword } from "@/lib/service";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
