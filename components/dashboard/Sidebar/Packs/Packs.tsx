@@ -1,10 +1,10 @@
+import { useTransition } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { usePathname } from "next/navigation";
+
 import { useSession } from "@/context/user";
 import { checkout } from "@/lib/stripe";
-import { usePathname } from "next/navigation";
-import { loadStripe } from "@stripe/stripe-js";
-import { useTransition } from "react";
 import { PlanType } from "@/types/supabase";
-
 export default function Packs({ plan }: { plan: PlanType }) {
     const { user } = useSession();
     const pathname = usePathname();
@@ -31,12 +31,12 @@ export default function Packs({ plan }: { plan: PlanType }) {
     return (
         <form
             onSubmit={handleSubscriptionStart}
-            className="p-5 text-white border rounded-xl"
+            className="p-5 border rounded-xl text-white"
         >
-            <div className="my-4">
+            <div className="my-4 space-y-3 text-2xl font-bold">
                 <h2>{plan.name}</h2>
             </div>
-            <div className="my-4">
+            <div className="my-4 text-2xl font-bold">
                 <p>{plan.interval}</p>
             </div>
             <div className="my-4">

@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useTheme } from "next-themes"
-import { Sun, Moon } from "lucide-react"
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
 
 export default function ToggleTheme() {
-    const { resolvedTheme, setTheme } = useTheme()
+    const { resolvedTheme, setTheme } = useTheme();
 
-    const [mounted, setMounted] = useState(false)
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         // Je m'assure ici que le thème est monté côté client avant de l'utiliser
-        setMounted(true)
-    }, [])
+        setMounted(true);
+    }, []);
 
-    if (!mounted) return null
+    if (!mounted) return null;
 
     return (
         <div
@@ -31,8 +31,8 @@ export default function ToggleTheme() {
                     // et donc ici, je change le thème en fonction de la valeur de la propriété resolvedTheme
                 }
             >
-                <Sun className="h-5 w-5 mr-3" />
-                <span>Light</span>
+                <Sun className="h-5 w-5 xl:mr-3 m-0" />
+                <span className="xl:block hidden">Light</span>
             </button>
             <button
                 className="relative z-1 group flex justify-center items-center h-10 basis-1/2 font-semibold transition-colors hover:text-n-1"
@@ -40,9 +40,9 @@ export default function ToggleTheme() {
                     setTheme(resolvedTheme === "light" ? "dark" : "light")
                 }
             >
-                <Moon className="h-5 w-5 mr-3" />
-                <span>Dark</span>
+                <Moon className="h-5 w-5 xl:mr-3 m-0" />
+                <span className="xl:block hidden">Dark</span>
             </button>
-        </div>
-    )
+        </div> 
+    );
 }

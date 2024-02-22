@@ -120,7 +120,7 @@ const PasswordChecker = () => {
         <div className="flex flex-row w-full gap-x-20 mt-10">
             <div className="flex flex-col gap-y-2 basis-1/3">
                 <form className="flex flex-col" onSubmit={handleSubmit}>
-                    <label className="flex flex-col gap-y-4">
+                    <label className="flex flex-col gap-y-4 mb-4">
                         <div
                             className={`px-2 py-1 text-xs font-medium text-white ${badge.color} rounded-md w-fit`}
                         >

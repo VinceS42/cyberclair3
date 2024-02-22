@@ -1,29 +1,32 @@
 "use client";
 
-import Image from "next/image";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 
-import { useSession } from "@/context/user";
+import Image from "next/image";
 
+import { useSession } from "@/context/user";
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { LogOut, Settings, User } from "lucide-react";
 
-import BtnUpgrade from "../BtnUpgrade";
 import CardUpdate from "../UpdateProfil/CardUpdate";
+import BtnUpgrade from "../BtnUpgrade";
+import { useState } from "react";
 
 type Props = {
     isPremium: boolean;
 };
 
-export default function CardAccount({ isPremium }: Readonly<Props>) {
+export default function CardAccount() {
     const router = useRouter();
     const { user } = useSession();
+    const [isPremium, setIsPremium] = useState<boolean>(false)
 
 
     async function signOut() {
@@ -39,8 +42,8 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
         user && (
             <div className="mb-3 shadow-xl">
                 <div className="p-2.5 bg-cyberSecondary rounded-xl">
-                    <div className="flex items-center justify-between gap-x-2 text-white px-2.5 py-2.5 pb-4.5">
-                        <div className="relative flex flex-row min-w-10 min-h-10 gap-x-3 w-full">
+                    <div className="flex items-center justify-between gap-x-2 py-2.5 text-white xl:px-2.5 xl:pb-4.5 ">
+                        <div className="relative flex flex-row gap-x-3 w-full justify-center">
                             {user.avatar_url ? (
                                 <Image
                                     src={user.avatar_url}
@@ -55,14 +58,14 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
                                     <User className="h-6 w-6 text-gray-600" />
                                 </div>
                             )}
-                            <div className="flex flex-col w-full">
+                            <div className="flex-col w-full xl:block hidden">
                                 <div className="flex flex-row gap-x-1 font-semibold text-sm">
                                     <span>{user.last_name}</span>
                                     <span>{user.first_name}</span>
                                     <div className="flex self-start h-full ml-auto">
                                         <div className="bg-lightGreen rounded-lg px-3">
                                             <span className="text-black text-xs font-semibold">
-                                                {isPremium ? "Pro" : "Free"}
+                                            {isPremium ? "Premium" : "Free"}
                                             </span>
                                         </div>
                                     </div>
@@ -79,7 +82,7 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
                             className="flex gap-x-1 items-center justify-end w-full h-12 font-medium group"
                         >
                             <LogOut className="h-5 w-5 opacity-30 group-hover:opacity-100 transition duration-100 ease-in-out" />
-                            <span className="text-white opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out">
+                            <span className="text-white opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out hidden xl:block">
                                 Déconnexion
                             </span>
                         </button>
@@ -87,7 +90,7 @@ export default function CardAccount({ isPremium }: Readonly<Props>) {
                             <DialogTrigger asChild>
                                 <button className="flex gap-x-1 items-center justify-start w-full h-12 font-medium group">
                                     <Settings className="h-5 w-5 opacity-30 group-hover:opacity-100 transition duration-100 ease-in-out" />
-                                    <span className="text-white opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out">
+                                    <span className="text-white opacity-50 group-hover:opacity-100 transition duration-100 ease-in-out hidden xl:block">
                                         Paramètres
                                     </span>
                                 </button>

@@ -1,10 +1,6 @@
-import { headers } from "next/headers";
-import { supabase } from "@/utils/supabase/client";
-import { redirect } from "next/navigation";
-
 import AuthForm from "@/components/login/AuthForm";
 import { signInUser, signUp } from "@/lib/service";
-import { useState } from "react";
+
 
 export default function Login({
     searchParams,

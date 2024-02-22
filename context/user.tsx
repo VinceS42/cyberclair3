@@ -70,6 +70,7 @@ export default function UserProvider({
                 const names = user.user_metadata.full_name.split(" ");
                 first_name = names[0];
                 last_name = names.slice(1).join(" ");
+                avatar_url = user.user_metadata.picture;
             } else {
                 first_name = user.user_metadata.first_name || "";
                 last_name = user.user_metadata.last_name || "";
