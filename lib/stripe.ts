@@ -9,6 +9,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string, {
 });
 
 export async function checkout(email: string, redirectTo: string, priceId: string) {
+    // pour passer cet objet ici, qui est utilisé dans le "use server" et qui va être envoyé dans un "use client" je suis obligé de le stringify sinon je via savoir des erreurs
+    
     return JSON.stringify(
         await stripe.checkout.sessions.create({
             customer_email: email,
