@@ -1,6 +1,6 @@
-import { createSupabaseServerClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { createSupabaseServerClient } from "@/utils/supabase/server";
 
 export async function GET(request: Request) {
     

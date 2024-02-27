@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "Cyberclair3",
     description: "",
     icons: {
-        icon: "/assets/img/Nico.png",
+        icon: "/assets/img/logo.svg",
     },
 };
 
