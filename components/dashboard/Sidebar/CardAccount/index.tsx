@@ -13,7 +13,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { LogOut, Settings, User } from "lucide-react";
+import { LogOut, Package, Settings, User } from "lucide-react";
 
 import CardUpdate from "../UpdateProfil/CardUpdate";
 import BtnUpgrade from "../BtnUpgrade";
@@ -109,7 +109,14 @@ export default function CardAccount({ isOpen }: SidebarProps) {
                             </DialogContent>
                         </Dialog>
                     </div>
-                    <BtnUpgrade />
+                    {user.subscription_status ? (
+                        <div className="flex flex-row justify-center items-center gap-x-2 w-full mt-2 h-12 px-0.5 font-medium text-center border-2 border-cyberBorder rounded-xl">
+                            <span className="hidden xl:block">Vos modules</span>
+                            <Package className="h-5 w-5" />
+                        </div>
+                    ) : (
+                        <BtnUpgrade />
+                    )}
                 </div>
             </div>
         )
