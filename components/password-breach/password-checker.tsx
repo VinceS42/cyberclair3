@@ -34,6 +34,7 @@ const passwordSchema = z.object({
  * Fonction pour vérifier si un mot de passe a été compromis en utilisant l'API Have I Been Pwned.
  * Je hash le mot de passe avec SHA1 pour ne pas exposer le mot de passe en clair lors de la vérification.
  */
+
 async function verifyPassword(
     password: string,
     setIsPwned: (isPwned: boolean | null) => void,

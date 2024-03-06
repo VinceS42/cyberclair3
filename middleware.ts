@@ -21,7 +21,6 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(loginUrl);
         }
         // Si data.session est no null et le path est /login, alors je redirige vers le dashboard
-
         return NextResponse.next();
     }
 

@@ -5,6 +5,7 @@ import "./globals.css";
 import { figtree } from "@/components/fonts";
 import { ThemeProvider } from "@/components/theme-provider";
 import UserProvider from "@/context/user";
+import CookiesConsent from "@/components/cookies-consent/CookiesConsent";
 
 export const metadata: Metadata = {
     title: "Cyberclair3",
@@ -31,6 +32,7 @@ export default function RootLayout({
                     <UserProvider>{children}</UserProvider>
                     <Toaster />
                 </ThemeProvider>
+                <CookiesConsent />
             </body>
         </html>
     );

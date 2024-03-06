@@ -76,7 +76,7 @@ export default function RegisterForm({
                 await signUp(formData);
 
                 // Si signUp réussit, vous pouvez gérer ici les actions après l'inscription.
-                console.log("Signup success!");
+                // console.log("Signup success!");
                 setErrorMessage(null);
             } catch (error: any) {
                 // Si signUp échoue, vous pouvez gérer ici les erreurs.
