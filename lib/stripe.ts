@@ -34,16 +34,17 @@ export async function createStripeCustomerForUser(
     try {
         // Je créez le client Stripe et je stocke l'ID utilisateur Supabase
         const customer = await stripe.customers.create({
-            metadata: { supabaseUserId },
+            metadata: { supabaseUserId },  // J'ajoute l'ID utilisateur Supabase dans les métadonnées du client Stripe pour le référencer plus tard.
         });
 
-        // Récupérez l'ID du client Stripe créé
+         // Après la création, je récupère l'ID du client Stripe.
         const stripeCustomerId = customer.id;
 
+          // J'utilise cet ID pour mettre à jour le profil de l'utilisateur dans Supabase.
         const { data, error } = await supabase
             .from("profiles")
-            .update({ stripe_customer_id: stripeCustomerId })
-            .eq("stripe_customer_id", supabaseUserId);
+            .update({ stripe_customer_id: stripeCustomerId }) // Je mets à jour la colonne 'stripe_customer_id' avec le nouvel ID client Stripe.
+            .eq("stripe_customer_id", supabaseUserId); // Je m'assure de ne mettre à jour que le profil de l'utilisateur avec l'ID correspondant.
 
         if (error) {
             console.error("Error updating profiles:", error);

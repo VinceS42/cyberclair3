@@ -7,7 +7,6 @@ import React, {
     useMemo,
     useContext,
     useEffect,
-    use,
 } from "react";
 
 // Définis un type plus spécifique pour les données utilisateur si possible
@@ -21,6 +20,7 @@ type User = {
     avatar_url: string;
     password: string;
     stripe_customer_id: string;
+    subscription_status: boolean;
 } | null;
 
 type UserContextProps = {
@@ -64,6 +64,7 @@ export default function UserProvider({
         let role = user.role;
         let password = user.password;
         let stripe_customer_id = "";
+        let subscription_status = user.subscription_status;
 
         if (user.user_metadata) {
             if (user.user_metadata.full_name) {
@@ -87,6 +88,7 @@ export default function UserProvider({
             avatar_url,
             password,
             stripe_customer_id,
+            subscription_status,
         };
     }
 
@@ -122,14 +124,15 @@ export default function UserProvider({
                     setError(error);
                 } else {
                     const user = session?.user;
+
                     if (user) {
-                        // Requête supplémentaire pour récupérer l'avatar_url depuis votre table de profils
+                        // Requête supplémentaire pour récupérer l'avatar_url depuis la table de profiles
                         const { data: profileData, error: profileError } =
                             await supabase
                                 .from("profiles")
-                                .select("avatar_url")
+                                .select("avatar_url, subscription_status")
                                 .eq("id", user.id)
-                                .single(); // Utilisez .single() pour obtenir un seul enregistrement
+                                .single(); // Utilisation de .single() pour obtenir un seul enregistrement
 
                         if (profileError) {
                             console.error(
@@ -140,10 +143,13 @@ export default function UserProvider({
                         // Mise à jour de user avec avatar_url récupéré
                         const updatedUser = {
                             ...session.user,
-                            avatar_url: profileData?.avatar_url, // Assurez-vous que cette propriété existe dans votre table
+                            avatar_url: profileData?.avatar_url,
+                            subscription_status:
+                                profileData?.subscription_status, // Ajoutez cette ligne
                         };
 
                         const normalizedUser = normalizeUserData(updatedUser);
+                     
                         setUser(normalizedUser);
                     }
                 }
@@ -153,6 +159,7 @@ export default function UserProvider({
                 setLoading(false);
             }
         };
+
         fetchSession();
 
         supabase.auth.onAuthStateChange((event, session) => {

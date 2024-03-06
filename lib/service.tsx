@@ -1,9 +1,10 @@
 "use server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies, headers } from "next/headers";
-import { createSupabaseServerClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+
 import { supabase } from "@/utils/supabase/client";
+import { createSupabaseServerClient } from "@/utils/supabase/server";
 
 //**************************/ SIGN UP USER /***************************//
 
@@ -19,7 +20,7 @@ export const signUp = async (formData: FormData) => {
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -45,7 +46,7 @@ export const signInUser = async (formData: FormData) => {
     const cookieStore = cookies();
     const supabase = createSupabaseServerClient(cookieStore);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
     });

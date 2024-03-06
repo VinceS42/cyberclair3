@@ -58,6 +58,14 @@ export default function RegisterForm({
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         startTransition(async () => {
+            
+            // L'utilisation de append() pour ajouter chaque paire clé/valeur à un nouvel objet FormData est la manière standard de procéder. Cela permet de séparer la logique de validation des données (avec Zod) de la logique d'envoi de ces données à votre backend ou à une API externe qui attend du FormData.
+
+            // FormData, correspondant à un champ de votre formulaire.
+            // Ceci est particulièrement utile pour préparer les données à être envoyées dans une requête HTTP, notamment dans le cadre d'une inscription utilisateur où vous envoyez les informations du formulaire à un serveur ou une API.
+
+            // append(). Chaque appel à append() ajoute une nouvelle paire clé/valeur à l'objet
+
             const formData = new FormData();
             formData.append("first_name", data.first_name);
             formData.append("last_name", data.last_name);
@@ -145,7 +153,7 @@ export default function RegisterForm({
                                     <Input
                                         className="bg-white text-black"
                                         autoComplete="email"
-                                        placeholder="dupont@gmail.com"
+                                        placeholder="email@gmail.com"
                                         {...field}
                                         type="email"
                                         onChange={field.onChange}
@@ -197,9 +205,7 @@ export default function RegisterForm({
                                         autoComplete="new-password"
                                         placeholder="Confirmez votre mot de passe"
                                         {...field}
-                                        type={
-                                            showPassword ? "text" : "password"
-                                        }
+                                        type= "password"
                                         onChange={field.onChange}
                                     />
                                 </FormControl>

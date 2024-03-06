@@ -17,17 +17,22 @@ import { LogOut, Settings, User } from "lucide-react";
 
 import CardUpdate from "../UpdateProfil/CardUpdate";
 import BtnUpgrade from "../BtnUpgrade";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-type Props = {
-    isPremium: boolean;
+type SidebarProps = {
+    isOpen: boolean;
 };
 
-export default function CardAccount() {
+export default function CardAccount({ isOpen }: SidebarProps) {
     const router = useRouter();
     const { user } = useSession();
-    const [isPremium, setIsPremium] = useState<boolean>(false)
+    const [isPremium, setIsPremium] = useState<boolean>(false);
 
+    useEffect(() => {
+        if (user && typeof user.subscription_status !== "undefined") {
+            setIsPremium(user.subscription_status);
+        }
+    }, [user]);
 
     async function signOut() {
         const { error } = await supabase.auth.signOut();
@@ -42,7 +47,7 @@ export default function CardAccount() {
         user && (
             <div className="mb-3 shadow-xl">
                 <div className="p-2.5 bg-cyberSecondary rounded-xl">
-                    <div className="flex items-center justify-between gap-x-2 py-2.5 text-white xl:px-2.5 xl:pb-4.5 ">
+                    <div className="flex items-center justify-between gap-x-2 py-2.5 text-white xl:px-2.5 xl:pb-4.5">
                         <div className="relative flex flex-row gap-x-3 w-full justify-center">
                             {user.avatar_url ? (
                                 <Image
@@ -65,7 +70,9 @@ export default function CardAccount() {
                                     <div className="flex self-start h-full ml-auto">
                                         <div className="bg-lightGreen rounded-lg px-3">
                                             <span className="text-black text-xs font-semibold">
-                                            {isPremium ? "Premium" : "Free"}
+                                                {user.subscription_status
+                                                    ? "Premium"
+                                                    : "Free"}
                                             </span>
                                         </div>
                                     </div>

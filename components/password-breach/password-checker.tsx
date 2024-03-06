@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react"
-import CryptoJS from "crypto-js"
-import * as z from "zod"
+import React, { useEffect, useState } from "react";
+import CryptoJS from "crypto-js";
+import * as z from "zod";
 import {
     Loader2,
     Radar,
@@ -10,17 +10,18 @@ import {
     Shield,
     AtSign,
     Fingerprint,
-} from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-import NordPassBanner from "@/public/assets/img/NordPass/Nordpass-680x250.png"
+import NordPassBanner from "@/public/assets/img/NordPass/Nordpass-680x250.png";
 
+// Je définis un schéma pour la validation du mot de passe, en utilisant Zod, exigeant au moins 6 caractères.
 const passwordSchema = z.object({
     password: z
         .string()
         .min(6, "Le mot de passe doit contenir au moins 6 caractères."),
-})
+});
 
 /**
  * Vérifie si un mot de passe a été compromis en utilisant l'API Have I Been Pwned.
@@ -28,76 +29,105 @@ const passwordSchema = z.object({
  * @param setIsPwned Fonction pour définir l'état de compromission du mot de passe.
  * @param setPwnedCount Fonction pour définir le nombre de fois que le mot de passe a été vu dans les fuites.
  */
+
+/**
+ * Fonction pour vérifier si un mot de passe a été compromis en utilisant l'API Have I Been Pwned.
+ * Je hash le mot de passe avec SHA1 pour ne pas exposer le mot de passe en clair lors de la vérification.
+ */
 async function verifyPassword(
     password: string,
     setIsPwned: (isPwned: boolean | null) => void,
     setPwnedCount: (count: number) => void // Ajout de l'argument pour le nombre de compromissions
 ) {
-    const hash = CryptoJS.SHA1(password)
+    // Hashage du mot de passe et préparation pour la requête API.
+    const hash = CryptoJS.SHA1(password) // Je convertis le hash en une chaîne de caractères hexadécimaux, car l'API Have I Been Pwned travaille avec des hashes
         .toString(CryptoJS.enc.Hex)
-        .toUpperCase()
-    const prefix = hash.slice(0, 5)
-    const suffix = hash.slice(5)
+        .toUpperCase(); // L'API exige que le hash soit en majuscules, donc je convertis toute la chaîne en majuscules.
+
+    // Je divise le hash SHA-1 en deux parties : le préfixe et le suffixe.
+    // Cela est conforme à la méthode k-anonymity utilisée par Have I Been Pwned pour vérifier les mots de passe sans compromettre la sécurité.
+
+    const prefix = hash.slice(0, 5); // Le préfixe contient les 5 premiers caractères du hash.
+    const suffix = hash.slice(5); // Le suffixe contient le reste du hash après le préfixe.
+
+    // Le préfixe est utilisé pour la requête API, et le suffixe est utilisé pour vérifier localement la réponse de l'API.
 
     try {
+        
+        // J'envoie une requête à l'API Have I Been Pwned pour récupérer une liste de hashes de mots de passe commençant par le préfixe.
         const response = await fetch(
             `https://api.pwnedpasswords.com/range/${prefix}`
-        )
-        const text = await response.text()
-        const regex = new RegExp(`^${suffix}:([0-9]+)`, "m")
-        const match = regex.exec(text)
+        );
 
+
+        // Je convertis la réponse en texte pour pouvoir la traiter.
+        const text = await response.text();
+
+        // Je chercher le suffixe de mon hash dans la liste des réponses.
+        const regex = new RegExp(`^${suffix}:([0-9]+)`, "m");
+
+        // J'exécute sur le texte de la réponse.
+        const match = regex.exec(text);
+
+        // Si un match est trouvé, cela signifie que le suffixe de mon hash est dans la liste et donc le mot de passe a été compromis.
         if (match) {
+
             // Si le suffixe est trouvé, définir le mot de passe comme compromis et mettre à jour le nombre de fois qu'il a été vu
-            setIsPwned(true)
-            setPwnedCount(parseInt(match[1], 10))
+            setIsPwned(true);
+
+            // J'extrais le nombre de fois que ce mot de passe a été vu dans les fuites et je mets à jour l'état correspondant.
+            setPwnedCount(parseInt(match[1], 10));
         } else {
             // Si le suffixe n'est pas trouvé, le mot de passe n'est pas compromis
-            setIsPwned(false)
-            setPwnedCount(0)
+            setIsPwned(false);
+            setPwnedCount(0);
         }
     } catch (error) {
-        console.error("Erreur lors de la vérification du mot de passe :", error)
-        setIsPwned(null)
-        setPwnedCount(0) // Réinitialiser le compte en cas d'erreur
+        console.error(
+            "Erreur lors de la vérification du mot de passe :",
+            error
+        );
+        // Je réinitialise les états pour indiquer qu'une erreur est survenue pendant la vérification.
+        setIsPwned(null);
+        setPwnedCount(0); // Réinitialiser le compte en cas d'erreur
     }
 }
 
 const PasswordChecker = () => {
-    const [password, setPassword] = useState("")
-    const [isPwned, setIsPwned] = useState<boolean | null>(null)
-    const [pwnedCount, setPwnedCount] = useState(0) // État pour stocker le nombre de fois que le mot de passe a été compromis
-    const [errorMessage, setErrorMessage] = useState("") // Nouvel état pour gérer les messages d'erreur de validation
-    const [isPending, setIsPending] = useState(false)
+    const [password, setPassword] = useState("");
+    const [isPwned, setIsPwned] = useState<boolean | null>(null);
+    const [pwnedCount, setPwnedCount] = useState(0); // État pour stocker le nombre de fois que le mot de passe a été compromis
+    const [errorMessage, setErrorMessage] = useState(""); // Nouvel état pour gérer les messages d'erreur de validation
+    const [isPending, setIsPending] = useState(false);
     const [badge, setBadge] = useState({
         status: "Non vérifié",
         color: "bg-red-500",
         date: new Date(),
-    })
+    });
 
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault()
+        event.preventDefault();
 
         // Validation du mot de passe avec Zod
-        const validationResult = passwordSchema.safeParse({ password })
+        const validationResult = passwordSchema.safeParse({ password });
         if (!validationResult.success) {
-            setErrorMessage(validationResult.error.errors[0].message) // Affiche le premier message d'erreur
-            setIsPwned(null)
-            setPwnedCount(0)
-            return // Arrête la fonction si la validation échoue
+            setErrorMessage(validationResult.error.errors[0].message); // Affiche le premier message d'erreur
+            setIsPwned(null);
+            setPwnedCount(0);
+            return; // Arrête la fonction si la validation échoue
         }
 
-        setIsPending(true)
+        setIsPending(true);
 
         // Réinitialise le message d'erreur si la validation réussit
-        setErrorMessage("")
+        setErrorMessage("");
 
         // Continue avec la vérification du mot de passe
         setTimeout(() => {
-            verifyPassword(password, setIsPwned, setPwnedCount)
-            setIsPending(false)
-        }, 3000) // Ajout d'un délai pour simuler une requête asynchrone
-    }
+            verifyPassword(password, setIsPwned, setPwnedCount);
+            setIsPending(false);
+        }, 3000); // Ajout d'un délai pour simuler une requête asynchrone
+    };
 
     // TODO: Gérer le status du badge côté base de données
     useEffect(() => {
@@ -106,15 +136,15 @@ const PasswordChecker = () => {
                 status: "Vérifié",
                 color: "bg-red-500",
                 date: new Date(),
-            })
+            });
         } else if (isPwned === false) {
             setBadge({
                 status: "Vérifié",
                 color: "bg-green-500",
                 date: new Date(),
-            })
+            });
         }
-    }, [isPwned])
+    }, [isPwned]);
 
     return (
         <div className="flex flex-row w-full gap-x-20 mt-10">
@@ -453,7 +483,7 @@ const PasswordChecker = () => {
                 )}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default PasswordChecker
+export default PasswordChecker;

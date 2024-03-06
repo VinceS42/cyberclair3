@@ -1,9 +1,13 @@
-"use client";
-
 import { AsteriskSquare } from "lucide-react";
 
 import CardFeature from "@/components/dashboard/CardFeature";
 import Heading from "@/components/dashboard/Heading";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Dashboard - Cyberclair3",
+    description: "Vous voici sur votre dashboard personnel",
+};
 
 export default function Page() {
     return (
@@ -23,4 +27,3 @@ export default function Page() {
         </>
     );
 }
-

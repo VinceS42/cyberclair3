@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import * as z from "zod";
 import { signInUser } from "@/lib/service";
 
@@ -26,13 +26,11 @@ const FormSchema = z.object({
     }),
 });
 
-export default function SignInForm({
-    signIn,
-}: Readonly<{
+export default function SignInForm({}: Readonly<{
     signIn: (formData: FormData) => Promise<void>;
 }>) {
-   
     const [isPending, startTransition] = useTransition();
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -65,74 +63,78 @@ export default function SignInForm({
 
     return (
         <Form {...form}>
-           
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-full space-y-6"
-                >
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="flex items-center">
-                                    <Mail className="w-5 h-5 mr-2" />
-                                    <p className="text-base">Email :</p>
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        className="bg-white text-black"
-                                        autoComplete="email"
-                                        placeholder="test03@gmail.com"
-                                        {...field}
-                                        type="email"
-                                        onChange={field.onChange}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="flex items-center">
-                                    <Lock className="w-5 h-5 mr-2" />
-                                    <p className="text-base">Mot de passe :</p>
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        className="bg-white text-black"
-                                        placeholder="azerty"
-                                        {...field}
-                                        type="password"
-                                        onChange={field.onChange}
-                                        autoComplete="current-password"
-                                    />
-                                </FormControl>
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="w-full space-y-6"
+            >
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="flex items-center">
+                                <Mail className="w-5 h-5 mr-2" />
+                                <p className="text-base">Email :</p>
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                    className="bg-white text-black"
+                                    autoComplete="email"
+                                    placeholder="email@gmail.com"
+                                    {...field}
+                                    type="email"
+                                    onChange={field.onChange}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="flex items-center">
+                                <Lock className="w-5 h-5 mr-2" />
+                                <p className="text-base">Mot de passe :</p>
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                    className="bg-white text-black"
+                                    placeholder="******"
+                                    {...field}
+                                    type={showPassword ? "text" : "password"}
+                                    onChange={field.onChange}
+                                    autoComplete="current-password"
+                                />
+                            </FormControl>
 
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <Button
-                        type="submit"
-                        className="w-full flex gap-2 text-white text-base"
-                    >
-                        {!isPending ? (
-                            <LogIn className="w-5 h-5" />
-                        ) : (
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                        )}
-                        {isPending ? (
-                            <span className="opacity-50">Connexion...</span>
-                        ) : (
-                            "Connexion"
-                        )}
-                    </Button>
-                </form>           
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <div onClick={() => setShowPassword(!showPassword)}>
+                    <p className="text-sm text-white cursor-pointer hover:underline">
+                        Rendre le mot de passe visible
+                    </p>
+                </div>
+                <Button
+                    type="submit"
+                    className="w-full flex gap-2 text-white text-base"
+                >
+                    {!isPending ? (
+                        <LogIn className="w-5 h-5" />
+                    ) : (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                    )}
+                    {isPending ? (
+                        <span className="opacity-50">Connexion...</span>
+                    ) : (
+                        "Connexion"
+                    )}
+                </Button>
+            </form>
         </Form>
     );
 }

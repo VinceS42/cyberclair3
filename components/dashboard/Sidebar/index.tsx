@@ -7,13 +7,21 @@ import CardAccount from "./CardAccount";
 import ToggleTheme from "./ToggleTheme";
 import MenuItem from "../MenuItem";
 
-export default function Sidebar() {
+type SidebarProps = {
+    isOpen: boolean;
+};
+
+export default function Sidebar({ isOpen }: SidebarProps) {
     return (
-        <div className="fixed z-20 top-0 left-0 bottom-0 flex flex-col pt-10 px-5 w-0 pb-58 xl:w-80 lg:w-24 sm:w-24">
+        <div
+            className={`fixed z-20 top-0 left-0 bottom-0 flex flex-col pt-10 px-5 w-24 pb-58 xl:w-80 lg:w-24 transform transition-transform duration-300 ease-in-out ${
+                isOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+        >
             <div className="flex items-center h-30 pb-6 justify-center">
                 <Link
                     href="/dashboard"
-                    className="flex flex-row justify-center items-center  gap-x-2"
+                    className="flex flex-row justify-center items-center gap-x-2"
                 >
                     <Image
                         src={logo}
@@ -25,7 +33,7 @@ export default function Sidebar() {
                     </h1>
                 </Link>
             </div>
-            <div className="grow overflow-y-auto scroll-smooth scrollbar-none flex flex-col lg:items-center">
+            <div className="grow overflow-y-auto scroll-smooth scrollbar-none flex flex-col lg:items-center md:items-center sm:items-center">
                 <MenuItem
                     title="Tableau de bord"
                     icon={<Home className="text-white" />}
@@ -37,8 +45,8 @@ export default function Sidebar() {
                     href="dashboard/password-check"
                 />
             </div>
-            <div className="absolute text-white left-0 bottom-0 right-0 pb-6 px-3 before:left-0 before:right-0 before:bottom-full before:h-10 before:bg-gradient-to-t before:from-[#131617] before:to-[#131617] before:pointer-events-none max-md:px-3">
-                <CardAccount />
+            <div className="absolute text-white left-0 bottom-0 right-0 pb-6 px-3 before:left-0 before:right-0 before:bottom-full before:h-10 before:bg-gradient-to-t before:from-[#131617] before:to-[#131617] before:pointer-events-none md:px-3">
+                <CardAccount isOpen={isOpen} />
                 <ToggleTheme />
             </div>
         </div>

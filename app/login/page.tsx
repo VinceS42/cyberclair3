@@ -8,14 +8,12 @@ export default function Login({
     searchParams: { message: string };
 }>) {
     const handleSignIn = async (formData: FormData) => {
-        "use server";
-    
+        "use server";    
         await signInUser(formData);
     };
 
     const handleSignUp = async (formData: FormData) => {
         "use server";
-
         await signUp(formData);
     };
 

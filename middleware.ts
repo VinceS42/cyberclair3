@@ -20,8 +20,7 @@ export async function middleware(request: NextRequest) {
             const loginUrl = new URL("/login", url.origin).toString();
             return NextResponse.redirect(loginUrl);
         }
-
-        // if data.session is not null and path is /login, redirect to /dashboard
+        // Si data.session est no null et le path est /login, alors je redirige vers le dashboard
 
         return NextResponse.next();
     }
