@@ -1,6 +1,5 @@
-import React from "react";
 
-export default function () {
+export default function policyConcent() {
     return (
         <div className="container mx-auto px-4 text-white">
             <div className="text-white py-6 mt-8 rounded-lg shadow-lg">
