@@ -27,7 +27,7 @@ export default function CookiesConsent() {
                     Ce site utilise des cookies pour améliorer votre expérience
                     utilisateur, réaliser des analyses de trafic, et offrir un
                     contenu personnalisé. En poursuivant votre navigation sur ce
-                    site, vous acceptez l'utilisation de cookies pour les
+                    site, vous acceptez l&apos;utilisation de cookies pour les
                     objectifs décrits.
                     <Link
                         href={"/policy-consent"}
