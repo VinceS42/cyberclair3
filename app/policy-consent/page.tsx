@@ -18,7 +18,7 @@ export default function () {
 
             <div className="text-white py-6 mt-8 rounded-lg shadow-lg">
                 <h2 className="text-3xl font-semibold mb-4">
-                    Collecte d'informations :
+                    Collecte d&apos;informations :
                 </h2>
                 <p className="text-lg mt-2">
                     Nous collectons des informations pour fournir et améliorer
@@ -31,13 +31,13 @@ export default function () {
                             création de compte.
                         </li>
                         <li>
-                            - Cookies et données d'utilisation : pour améliorer
-                            l'expérience utilisateur et analyser l'utilisation
+                            - Cookies et données d&apos;utilisation : pour améliorer
+                            l&apos;expérience utilisateur et analyser l&apos;utilisation
                             du site.
                         </li>
                         <li>
-                            - Documents d'identification : cartes d'identité ou
-                            passeports, uniquement lorsqu'il est strictement
+                            - Documents d&apos;identification : cartes d&apos;identité ou
+                            passeports, uniquement lorsqu&apos;il est strictement
                             nécessaire pour vérifier votre identité.
                         </li>
                     </ul>
@@ -49,7 +49,7 @@ export default function () {
                     Utilisation des Informations :
                 </h2>
                 <p className="text-lg mt-2">
-                    Vos données nous permettent d'offrir nos services, tels que
+                    Vos données nous permettent d&apos;offrir nos services, tels que
                     :
                     <ul>
                         <li className="mt-3">

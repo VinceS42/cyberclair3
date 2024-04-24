@@ -114,7 +114,7 @@ export default function Page() {
                                 pointe nous a amenés à établir des partenariats
                                 stratégiques avec des leaders de l&apos;industrie de
                                 la sécurité. Ces collaborations nous permettent
-                                d'offrir des solutions de sécurité en ligne
+                                d&apos;offrir des solutions de sécurité en ligne
                                 encore plus robustes et avancées, vous assurant
                                 que vous bénéficiez toujours des protections les
                                 plus efficaces contre les menaces numériques.
