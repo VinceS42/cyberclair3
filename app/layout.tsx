@@ -8,10 +8,10 @@ import UserProvider from "@/context/user";
 import CookiesConsent from "@/components/cookies-consent/CookiesConsent";
 
 export const metadata: Metadata = {
-    title: "Cyberclair3",
+    title: "projet-BTS Fayon Vincent",
     description: "",
     icons: {
-        icon: "/assets/img/logo.svg",
+        icon: "/assets/img/logo.png",
     },
 };
 

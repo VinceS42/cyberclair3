@@ -12,7 +12,7 @@ import RegisterForm from "./RegisterForm";
 import Image from "next/image";
 import OAuthForm from "./OAuthForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import logo from "@/public/assets/img/logo.svg";
+import logo from "@/public/assets/img/logo.png";
 
 import {
     Form,
@@ -84,10 +84,10 @@ export default function AuthForm({
             <div className="flex items-center justify-center gap-2">
                 <Image
                     src={logo}
-                    alt="logo-cyberclaire"
+                    alt="logo"
                     className="w-12 h-12"
                 />
-                <h1 className="text-white text-2xl font-bold">CyberClair3</h1>
+                <h1 className="text-white text-2xl font-bold">Projet-BTS</h1>
             </div>
             {!resetPassword && (
                 <div>

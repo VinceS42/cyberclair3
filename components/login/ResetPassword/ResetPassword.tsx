@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import logo from "@/public/assets/img/logo.svg";
+import logo from "@/public/assets/img/logo.png";
 import { Loader2, Lock, Save } from "lucide-react";
 import Image from "next/image";
 import { confirmResetPassword } from "@/lib/service";
@@ -92,10 +92,10 @@ export default function ResetPassword() {
             <div className="flex items-center justify-center gap-2">
                 <Image
                     src={logo}
-                    alt="logo-cyberclaire"
+                    alt="logo"
                     className="w-12 h-12"
                 />
-                <h1 className="text-white text-2xl font-bold">CyberClair3</h1>
+                <h1 className="text-white text-2xl font-bold">Projet BTS</h1>
             </div>
             <Form {...formResetPassword}>
                 <form

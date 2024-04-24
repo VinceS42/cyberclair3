@@ -5,7 +5,7 @@ import Heading from "@/components/dashboard/Heading";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Dashboard - Cyberclair3",
+    title: "Dashboard",
     description: "Vous voici sur votre dashboard personnel",
 };
 

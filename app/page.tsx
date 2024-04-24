@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "CyberClair3",
+    title: "projet-BTS Fayon Vincent",
     description: "",
 };
 

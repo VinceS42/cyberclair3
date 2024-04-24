@@ -8,7 +8,7 @@ export default function () {
                     Politique de Confidentialité :
                 </h2>
                 <p className="text-lg mt-2">
-                    Bienvenue sur CyberClair3 ! Votre vie privée est de la plus
+                    Bienvenue ! Votre vie privée est de la plus
                     haute importance pour nous. Cette politique de
                     confidentialité explique comment nous collectons, utilisons,
                     partageons et protégeons vos informations personnelles,

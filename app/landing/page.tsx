@@ -4,17 +4,17 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 
-import logo from "@/public/assets/img/logo.svg";
+import logo from "@/public/assets/img/logo.png";
 import { MovingBorderBtn } from "@/components/ui/moving-border";
 
 export default function Page() {
     return (
         <>
             <Head>
-                <title>CyberClair3 - Protégez votre identité en ligne</title>
+                <title>Protégez votre identité en ligne</title>
                 <meta
                     name="description"
-                    content="CyberClair3 est une plateforme SaaS qui aide à gérer et à protéger votre identité sur Internet."
+                    content="plateforme SaaS qui aide à gérer et à protéger votre identité sur Internet."
                 />
                 <meta
                     name="keywords"
@@ -31,12 +31,12 @@ export default function Page() {
                     <div className="flex flex-col items-center justify-center">
                         <Image
                             src={logo}
-                            alt="logo-cyberclaire"
+                            alt="logo"
                             width={80}
                             height={80}
                         />
                         <h1 className="text-3xl font-bold mt-2">
-                            CyberClair3 - Votre Bouclier de Confidentialité en
+                            Votre Bouclier de Confidentialité en
                             Ligne
                         </h1>
                         <p className="mt-2 text-xl">
@@ -53,7 +53,7 @@ export default function Page() {
                                 className="p-6"
                             >
                                 <h2 className=" text-xl">
-                                    Découvrez CyberClair3
+                                    Découvrez nous
                                 </h2>
                             </MovingBorderBtn>
                         </Link>
@@ -73,13 +73,13 @@ export default function Page() {
                             </p>
 
                             <h3 className="text-2xl font-semibold mt-4">
-                                Pourquoi Choisir CyberClair3 ?
+                                Pourquoi nous Choisir ?
                             </h3>
                             <h4 className="text-xl font-semibold mt-3">
                                 Démocratisation de la Cybersécurité
                             </h4>
                             <p className="text-lg mt-2">
-                                Chez CyberClair3, nous croyons que la sécurité
+                                Nous croyons que la sécurité
                                 en ligne devrait être accessible à tous, pas
                                 seulement aux experts en technologie. Notre
                                 mission est de simplifier la cybersécurité,
@@ -112,7 +112,7 @@ export default function Page() {
                             <p className="text-lg mt-2 mb-4">
                                 Notre engagement envers une cybersécurité de
                                 pointe nous a amenés à établir des partenariats
-                                stratégiques avec des leaders de l'industrie de
+                                stratégiques avec des leaders de l&apos;industrie de
                                 la sécurité. Ces collaborations nous permettent
                                 d'offrir des solutions de sécurité en ligne
                                 encore plus robustes et avancées, vous assurant
@@ -142,8 +142,8 @@ export default function Page() {
                                 </li>
                             </ul>
                             <p className="mt-4 text-white">
-                                Rejoignez les nombreux utilisateurs qui font
-                                confiance à CyberClair3 pour sécuriser leur
+                                Rejoignez les nombreux utilisateurs qui nous font
+                                confiance  pour sécuriser leur
                                 présence en ligne. Prenez dès maintenant le
                                 contrôle de votre identité numérique.
                             </p>
@@ -156,7 +156,7 @@ export default function Page() {
                                 className="p-6"
                             >
                                 <h2 className=" text-xl">
-                                    Découvrez CyberClair3
+                                    Découvrez nos services
                                 </h2>
                             </MovingBorderBtn>
                         </Link>
@@ -164,7 +164,7 @@ export default function Page() {
                 </main>
 
                 <footer className="py-10 border-t mt-10 text-center text-white">
-                    © 2024 CyberClair3. Tous droits réservés.
+                    © 2024 Fayon Vincent. Tous droits réservés.
                 </footer>
             </div>
         </>

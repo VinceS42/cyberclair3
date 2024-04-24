@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Home, AsteriskSquare } from "lucide-react";
 
-import logo from "../../../public/assets/img/logo.svg";
+import logo from "../../../public/assets/img/logo.png";
 import CardAccount from "./CardAccount";
 import ToggleTheme from "./ToggleTheme";
 import MenuItem from "../MenuItem";
@@ -25,11 +25,11 @@ export default function Sidebar({ isOpen }: SidebarProps) {
                 >
                     <Image
                         src={logo}
-                        alt="logo-cyberclaire"
+                        alt="logo"
                         className="w-12 h-12 lg:items-center"
                     />
                     <h1 className="xl:block hidden text-white text-2xl font-bold">
-                        CyberClair3
+                        Projet-BTS
                     </h1>
                 </Link>
             </div>
