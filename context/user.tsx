@@ -100,7 +100,7 @@ export default function UserProvider({
                     access_type: "offline",
                     prompt: "consent",
                 },
-                redirectTo: `https://projet-bts.vercel.app/auth/callback`,
+                redirectTo: `${origin}/auth/callback`,
             },
         });
 

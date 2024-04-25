@@ -19,7 +19,7 @@ export async function GET(request: Request) {
         const supabase = createSupabaseServerClient(cookieStore);
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!error) {
-            return NextResponse.redirect("https://projet-bts.vercel.app/dashboard");
+            return NextResponse.redirect(requestUrl.origin);
         }
     }
 }
